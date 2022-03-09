@@ -13,12 +13,23 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router";
 
-const pages = ["Home", "Jobs", "AddJob"];
-const settings = ["Profile", "Settings"];
+
 
 const ResponsiveAppBar = () => {
   let navigate = useNavigate();
-
+  const [pages, setPages] = React.useState([]);
+  const [settings, setSettings] = React.useState([]);
+  React.useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setPages(["Home", "Jobs", "AddJob", "Employees"]);
+      setSettings(["Profile", "Settings"]);
+    } else {
+      setPages(["Jobs"]);
+      setSettings(["login", "register"]);
+    }
+  },[localStorage.getItem("token")])
+  
+  
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -66,11 +77,15 @@ const ResponsiveAppBar = () => {
             variant="h6"
             noWrap
             component="div"
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate("/");
+            }}
             sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
           >
-            LOGO
+            Meta-HR
           </Typography>
-          
+
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -114,7 +129,7 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            LOGO
+            Meta-HR
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
@@ -159,9 +174,14 @@ const ResponsiveAppBar = () => {
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
-              <MenuItem style={{backgroundColor:"red", color:"white"}} onClick={logout}>
-                <Typography textAlign="center">logout</Typography>
-              </MenuItem>
+              {localStorage.getItem("token") && (
+                <MenuItem
+                  style={{ backgroundColor: "red", color: "white" }}
+                  onClick={logout}
+                >
+                  <Typography textAlign="center">logout</Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>
