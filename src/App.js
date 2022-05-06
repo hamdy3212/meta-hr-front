@@ -9,6 +9,7 @@ import ProtectedRoutes from "./ProtectedRoutes";
 import "./style.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
+import { Departments } from './Pages/Departments';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/addjob" element={<JobPost />} />
           <Route path="/employees" element={<PeopleList />} />
+          <Route path="/departments" element={<Departments />} />
         </Route>
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/login" element={<Login />} />
