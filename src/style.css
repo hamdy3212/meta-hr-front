@@ -1,7 +1,12 @@
 body {
     margin:0;
 }
-
+html,
+body,
+#root,
+.App {
+  height: 80%;
+}
 @import url("https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@400;500&display=swap");
 
 .container {

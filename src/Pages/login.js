@@ -50,10 +50,9 @@ function Login() {
   };
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" style={{ marginTop: "150px" }}>
+      <Container component="main" maxWidth="xs" style={{ marginTop: "50px" }}>
         <Box
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

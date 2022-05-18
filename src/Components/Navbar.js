@@ -13,23 +13,35 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router";
 
-
-
 const ResponsiveAppBar = () => {
   let navigate = useNavigate();
   const [pages, setPages] = React.useState([]);
   const [settings, setSettings] = React.useState([]);
   React.useEffect(() => {
     if (localStorage.getItem("token")) {
-      setPages(["Home", "Jobs", "AddJob", "Employees"]);
-      setSettings(["Profile", "Settings"]);
+      setPages([
+        { label: "Home", url: "Home" },
+        { label: "Jobs", url: "Jobs" },
+        { label: "Employees", url: "Employees" },
+        { label: "Departments", url: "departments" },
+      ]);
+      setSettings([
+        { label: "Tickets", url: "Tickets" },
+        { label: "Add Job", url: "addJob" },
+        { label: "Create New Account", url: "Register" },
+      ]);
     } else {
-      setPages(["Jobs"]);
-      setSettings(["login", "register"]);
+      setPages([
+        { label: "Login", url: "login" },
+        { label: "Register", url: "resetpassword" },
+      ]);
+      setSettings([
+        { label: "Login", url: "login" },
+        { label: "Register", url: "resetPassword" },
+      ]);
     }
-  },[localStorage.getItem("token")])
-  
-  
+  }, [localStorage.getItem("token")]);
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -63,7 +75,6 @@ const ResponsiveAppBar = () => {
   };
   const logout = () => {
     setAnchorElUser(null);
-
     localStorage.setItem("token", "");
     localStorage.setItem("localUserInfo", "");
     navigate("login");
@@ -97,7 +108,6 @@ const ResponsiveAppBar = () => {
             >
               <MenuIcon />
             </IconButton>
-
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -117,8 +127,11 @@ const ResponsiveAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem
+                  key={page}
+                  onClick={() => handleCloseNavMenu(page.url)}
+                >
+                  <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -135,10 +148,10 @@ const ResponsiveAppBar = () => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={() => handleCloseNavMenu(page)}
+                onClick={() => handleCloseNavMenu(page.url)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                {page.label}
               </Button>
             ))}
           </Box>
@@ -149,7 +162,6 @@ const ResponsiveAppBar = () => {
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
-
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
@@ -169,9 +181,9 @@ const ResponsiveAppBar = () => {
               {settings.map((setting) => (
                 <MenuItem
                   key={setting}
-                  onClick={() => handleCloseUserMenu(setting)}
+                  onClick={() => handleCloseUserMenu(setting.url)}
                 >
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center">{setting.label}</Typography>
                 </MenuItem>
               ))}
               {localStorage.getItem("token") && (

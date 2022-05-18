@@ -1,4 +1,9 @@
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
+import CreateTicket from "../Components/Tickets/CreateTicket"
 import React, {
   useState,
   useEffect,
@@ -6,49 +11,22 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import Button from "@mui/material/Button";
-import DeleteIcon from "@mui/icons-material/Delete";
-import "ag-grid-community/dist/styles/ag-grid.css";
-import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import EditIcon from "@mui/icons-material/Edit";
-import AddDepartment from "../Components/Departments/AddDepartment"
-import AssignDirector from "../Components/Departments/AssignDirector"
-
-export const Departments = () => {
+const Tickets = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
   const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
-  const [departmentId, setDepartmentId] = useState();
-  // Each Column Definition results in one Column.
   const [columnDefs, setColumnDefs] = useState([
     { field: "id", width: 50 },
-    { field: "name",width: 190  },
-    { field: "directorName",width: 200  },
+    { field: "creatorName" },
+    { field: "subject" },
+    { field: "lastMessage" },
   ]);
 
-  // delete department
-  const deleteDepartment = async () => {
-    const requestOptions = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      }
-    };
-    const response = await fetch(
-      `https://localhost:7057/api/Departments/${departmentId}`,
-      requestOptions
-    );
-  }
   const onSelectionChanged = useCallback(() => {
     const selectedRows = gridRef.current.api.getSelectedRows();
     selectedRows.length === 1
-      ? setDepartmentId(selectedRows[0].id)
+      ? console.log(selectedRows[0].id)
       : alert("Select only on department");
   }, []);
-
   const requestOptions = {
     headers: {
       "Content-Type": "application/json",
@@ -56,15 +34,36 @@ export const Departments = () => {
     },
   }; // fetch departments
   useEffect(() => {
-    fetch("https://localhost:7057/api/Departments", requestOptions)
+    fetch("https://localhost:7057/api/Tickets?pageNumber=1&pageSize=10", requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
-        setRowData(rowData);
+        console.log(rowData.objects)
+        setRowData(rowData.objects);
       });
   }, []);
-
   return (
-    <div
+    <Grid container spacing={2} style={{ padding: 30, display:"flex", justifyContent:"space-between", height:"100%" }}>
+      <Grid
+        sm="2"
+        style={{
+          backgroundColor: "lightgrey",
+          borderRadius: "5px",
+          display: "flex",
+          flexDirection: "column",
+          padding: "0 5px"         
+        }}
+      >
+        <Button variant="contained" color="success" style={{marginBottom:"10px"}}>
+          {" "}
+          All Tickets (99)
+        </Button>
+        <Button variant="contained" color="success">
+          {" "}
+          My Tickets (30)
+        </Button>
+      </Grid>
+      <Grid sm="10">
+      <div
       style={{
         width: "100%",
         height: "160%",
@@ -72,13 +71,14 @@ export const Departments = () => {
         justifyContent: "center",
         flexDirection: "column",
         alignItems: "center",
+        padding:"0 5px"
       }}
     >
       <div
         className="ag-theme-alpine"
         style={{
           height: "100%",
-          width: "35%",
+          width: "100%",
         }}
       >
         <AgGridReact
@@ -87,6 +87,9 @@ export const Departments = () => {
           rowData={rowData}
           columnDefs={columnDefs}
           onSelectionChanged={onSelectionChanged}
+          paginationAutoPageSize={true}
+          pagination={true}
+
         ></AgGridReact>
       </div>
       <div
@@ -97,17 +100,19 @@ export const Departments = () => {
           flexDirection: "row",
         }}
       >
+        {console.log(localStorage.getItem("localUserInfo"))}
+        <CreateTicket />
         <Button
           variant="contained"
-          onClick={()=>deleteDepartment()}
-          disabled={console.log("first")}
           color="error"
         >
-          delete
+          End Ticket
         </Button>
-        <AddDepartment/>
-        <AssignDirector departmentId={departmentId}/>
       </div>
     </div>
+      </Grid>
+    </Grid>
   );
 };
+
+export default Tickets;

@@ -1,15 +1,17 @@
-import Login from "./login.js";
-import Register from "./register.js";
-import Home from "./home.js";
+import Login from "./Pages/login.js";
+import ResetPw from "./Pages/ResetPw.js";
+import Register from "./Pages/Register.js";
+import Home from "./Pages/home.js";
 import Jobs from "./Components/Jobs.js";
 import JobPost from "./Components/JobPost.js";
 import Navbar from "./Components/Navbar.js";
-import PeopleList from "./Components/PeopleList.js";
+import Employees from "./Pages/Employees.js";
 import ProtectedRoutes from "./ProtectedRoutes";
 import "./style.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
 import { Departments } from './Pages/Departments';
+import Tickets from './Pages/Tickets';
 
 function App() {
   return (
@@ -19,12 +21,14 @@ function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Home />} />
           <Route path="/addjob" element={<JobPost />} />
-          <Route path="/employees" element={<PeopleList />} />
+          <Route path="/employees" element={<Employees />} />
           <Route path="/departments" element={<Departments />} />
+          <Route path="/tickets" element={<Tickets/>} />
+          <Route path="/register" element={<Register />} />
         </Route>
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/resetpassword" element={<ResetPw />} />
       </Routes>
     </BrowserRouter>
   );
