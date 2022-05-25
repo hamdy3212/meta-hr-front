@@ -40,9 +40,11 @@ function Login() {
     );
     if (response.status === 200) {
       const data2 = await response.json();
-      console.log(data2);
+      console.log(data2)
       localStorage.setItem("token", data2.localUserInfo.token);
-      localStorage.setItem("localUserInfo", data2.localUserInfo);
+      localStorage.setItem("role", data2.localUserInfo.roles[0]);
+      localStorage.setItem("userId", data2.localUserInfo.id);
+
       navigate("/");
     } else {
       alert("Email or Password is wrong!");

@@ -25,11 +25,23 @@ const ResponsiveAppBar = () => {
         { label: "Employees", url: "Employees" },
         { label: "Departments", url: "departments" },
       ]);
-      setSettings([
-        { label: "Tickets", url: "Tickets" },
-        { label: "Add Job", url: "addJob" },
-        { label: "Create New Account", url: "Register" },
-      ]);
+      if(localStorage.getItem("role") === "Admin"){
+        setSettings([
+          { label: "Create New Account", url: "Register" },
+          { label: "Add Job", url: "addJob" },
+
+        ])
+      } else if (localStorage.getItem("role") === "Employee"){
+        setSettings([
+          { label: "Tickets", url: "Tickets" },
+        ])
+      } else {
+        setSettings([
+          { label: "Tickets", url: "Tickets" },
+          { label: "Add Job", url: "addJob" },
+          { label: "Create New Account", url: "Register" },
+        ])
+      }
     } else {
       setPages([
         { label: "Login", url: "login" },
@@ -76,7 +88,7 @@ const ResponsiveAppBar = () => {
   const logout = () => {
     setAnchorElUser(null);
     localStorage.setItem("token", "");
-    localStorage.setItem("localUserInfo", "");
+    localStorage.setItem("role", "");
     navigate("login");
   };
 
@@ -128,7 +140,7 @@ const ResponsiveAppBar = () => {
             >
               {pages.map((page) => (
                 <MenuItem
-                  key={page}
+                  key={page.name}
                   onClick={() => handleCloseNavMenu(page.url)}
                 >
                   <Typography textAlign="center">{page.label}</Typography>
@@ -147,7 +159,7 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                key={page.name}
                 onClick={() => handleCloseNavMenu(page.url)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
@@ -180,7 +192,7 @@ const ResponsiveAppBar = () => {
             >
               {settings.map((setting) => (
                 <MenuItem
-                  key={setting}
+                  key={setting.name}
                   onClick={() => handleCloseUserMenu(setting.url)}
                 >
                   <Typography textAlign="center">{setting.label}</Typography>

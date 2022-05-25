@@ -14,8 +14,8 @@ import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditIcon from "@mui/icons-material/Edit";
-import AddDepartment from "../Components/Departments/AddDepartment"
-import AssignDirector from "../Components/Departments/AssignDirector"
+import AddDepartment from "../Components/Departments/AddDepartment";
+import AssignDirector from "../Components/Departments/AssignDirector";
 
 export const Departments = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
@@ -24,8 +24,8 @@ export const Departments = () => {
   // Each Column Definition results in one Column.
   const [columnDefs, setColumnDefs] = useState([
     { field: "id", width: 50 },
-    { field: "name",width: 190  },
-    { field: "directorName",width: 200  },
+    { field: "name", width: 190 },
+    { field: "directorName", width: 200 },
   ]);
 
   // delete department
@@ -35,13 +35,13 @@ export const Departments = () => {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
-      }
+      },
     };
     const response = await fetch(
       `https://localhost:7057/api/Departments/${departmentId}`,
       requestOptions
     );
-  }
+  };
   const onSelectionChanged = useCallback(() => {
     const selectedRows = gridRef.current.api.getSelectedRows();
     selectedRows.length === 1
@@ -89,25 +89,27 @@ export const Departments = () => {
           onSelectionChanged={onSelectionChanged}
         ></AgGridReact>
       </div>
-      <div
-        style={{
-          padding: "0 185px 0 185px",
-          display: "flex",
-          justifyContent: "space-around",
-          flexDirection: "row",
-        }}
-      >
-        <Button
-          variant="contained"
-          onClick={()=>deleteDepartment()}
-          disabled={console.log("first")}
-          color="error"
+      {localStorage.getItem("role") !== "Employee" && (
+        <div
+          style={{
+            padding: "0 185px 0 185px",
+            display: "flex",
+            justifyContent: "space-around",
+            flexDirection: "row",
+          }}
         >
-          delete
-        </Button>
-        <AddDepartment/>
-        <AssignDirector departmentId={departmentId}/>
-      </div>
+          <Button
+            variant="contained"
+            onClick={() => deleteDepartment()}
+            disabled={console.log("first")}
+            color="error"
+          >
+            delete
+          </Button>
+          <AddDepartment />
+          <AssignDirector departmentId={departmentId} />
+        </div>
+      )}
     </div>
   );
 };

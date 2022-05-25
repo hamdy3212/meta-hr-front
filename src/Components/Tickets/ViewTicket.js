@@ -10,6 +10,9 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import DialogContentText from "@mui/material/DialogContentText";
+import SendMessage from "./SendMessage";
+import Avatar from "@mui/material/Avatar";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -43,59 +46,47 @@ const BootstrapDialogTitle = (props) => {
     </DialogTitle>
   );
 };
-
 BootstrapDialogTitle.propTypes = {
   children: PropTypes.node,
   onClose: PropTypes.func.isRequired,
 };
 
-export default function CustomizedDialogs() {
+export default function ViewTicket({ ticketId, selectedTicket }) {
   const [open, setOpen] = React.useState(false);
-  const [subject, setSubject ] = useState("");
-  const [message, setMessage ] = useState("");
-
-  const handleClickOpen = () => {
+  const [messages, setMessages] = useState([]);
+  const handleClickOpen = async () => {
     setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
- 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // eslint-disable-next-line no-console
     const requestOptions = {
-      method: "POST",
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
-      body: JSON.stringify({
-        subject: subject,
-        message: message
-      }),
     };
     const response = await fetch(
-      "https://localhost:7057/api/Tickets/createTicket",
+      `https://localhost:7057/api/Tickets/${ticketId}/messages`,
       requestOptions
     );
     if (response.status === 200) {
       const data2 = await response.json();
       console.log(data2);
-      alert("Ticket sent successfully");
-      setOpen(false);
+      setMessages(data2);
     } else {
       alert("something is wrong!");
     }
+  };
+  const handleClose = () => {
+    setOpen(false);
   };
   return (
     <div>
       <Button
         variant="contained"
         color="success"
+        disabled={!ticketId}
         onClick={handleClickOpen}
       >
-        Create Ticket
+        View Ticket
       </Button>
       <BootstrapDialog
         onClose={handleClose}
@@ -107,28 +98,55 @@ export default function CustomizedDialogs() {
           id="customized-dialog-title"
           onClose={handleClose}
         >
-          Create Ticket
+          {selectedTicket.subject}
         </BootstrapDialogTitle>
-        <DialogContent dividers style={{display:"flex", flexDirection:"column", }}>
-          <TextField
-            id="subject"
-            label="Subject"
-            variant="outlined"
-            onChange={(e)=>setSubject(e.target.value)}
-            style={{marginBottom:"10px"}}
-          />
-          <TextField
-            id="message"
-            label="message"
-            onChange={(e)=>setMessage(e.target.value)}
-            multiline
-            rows={4}
-          />
+        <DialogContent
+          dividers
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          {messages.map((message) => {
+            return (
+              <div
+                style={{
+                  border: "1px solid grey",
+                  margin: "5px",
+                  borderRadius: "5px",
+                  padding: "0px 10px",
+                  boxShadow: "1px 1px 5px lightblue",
+                  boxShadow: "-1px -1px 5px lightblue",
+                  fontFamily: "Arial, Helvetica, sans-serif",
+                }}
+                className={`${
+                  message.senderId === localStorage.getItem("userId")
+                    ? "sender"
+                    : "receiver"
+                }`}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexWrap:"wrap"
+                  }}
+                >
+                  <div style={{display:"flex", alignItems:"center"}}>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/1.jpg"
+                      style={{marginRight:"5px"}}
+                    />
+                    <h2>{message.senderName}</h2>
+                  </div>
+                  <p style={{ opacity: 0.5 }}>{message.timestampUtc}</p>
+                </div>
+                <p>{message.content}</p>
+              </div>
+            );
+          })}
         </DialogContent>
         <DialogActions>
-          <Button autoFocus color="success" onClick={handleSubmit}>
-            Send
-          </Button>
+          <SendMessage ticketId={ticketId} />
         </DialogActions>
       </BootstrapDialog>
     </div>

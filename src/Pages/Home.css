@@ -1,0 +1,16 @@
+
+.announcement-card {
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+
+}
+.announcement-card:hover {
+    box-shadow: 0px 0px 10px black;
+}
+.announcement-card-header {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
