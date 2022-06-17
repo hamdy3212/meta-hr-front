@@ -21,7 +21,6 @@ const PeopleList = () => {
       {employees.map((employee) => {
         return (
           <div class="card" key={employee.id}>
-            {console.log(employee.id)}
             <img
               src={
                 employee.profilePictureURL ??

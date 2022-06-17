@@ -1,15 +1,18 @@
-
 .announcement-card {
   border: 1px solid grey;
   border-radius: 5px;
   padding: 5px;
   cursor: pointer;
-
+  transition: 0.2s;
 }
 .announcement-card:hover {
-    box-shadow: 0px 0px 10px black;
+  box-shadow: 0px 0px 10px #4caeff;
+}
+.announcement-card:active {
+  transform: scale(1.01);
 }
 .announcement-card-header {
+  line-height: 1;
   display: flex;
   align-items: center;
   margin: 10px 0;

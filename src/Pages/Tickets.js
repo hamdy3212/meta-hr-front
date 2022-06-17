@@ -60,7 +60,7 @@ const Tickets = () => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  }; // fetch departments
+  }; // fetch Tickets
   useEffect(async () => {
     const url =
       (await localStorage.getItem("role")) === "Employee"
