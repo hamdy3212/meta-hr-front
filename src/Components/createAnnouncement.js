@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-
+import AddAlertIcon from '@mui/icons-material/AddAlert';
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -89,7 +89,7 @@ export default function CustomizedDialogs() {
     if (response.status === 200) {
       const data2 = await response.json();
       console.log(data2);
-      alert("Department was addedd successfully");
+      alert("Announcement was addedd successfully");
       setOpen(false);
     } else {
       alert("something is wrong!");
@@ -97,8 +97,8 @@ export default function CustomizedDialogs() {
   };
   return (
     <div>
-      <Button variant="outlined" color="success" onClick={handleClickOpen}>
-        Create Announcement
+      <Button  variant="outlined" color="success" onClick={handleClickOpen}>
+        <AddAlertIcon/>
       </Button>
       <BootstrapDialog
         onClose={handleClose}

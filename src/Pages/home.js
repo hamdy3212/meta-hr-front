@@ -2,37 +2,56 @@ import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import CreateAnnouncement from "../Components/createAnnouncement";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import "./Home.css";
 const Home = () => {
-  const [tickets, setTickets] = useState({ objects: [], totalCount: 0 });
-  const [announcements, setAnnouncements] = useState({
-    objects: [],
-    totalCount: 0,
-  });
-
+  const [announcements, setAnnouncements] = useState([]);
+  const [announcementsPageNumber, setAnnouncementsPageNumber] = useState(1);
+  const [hasMoreAnnouncements, setHasMoreAnnouncements] = useState(true);
+  const [tickets, setTickets] = useState([]);
+  const [hasMoreTickets, setHasMoreTickets] = useState(true);
+  const [ticketsPageNumber, setTicketsPageNumber] = useState(1);
   const requestOptions = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  }; // fetch Tickets
-  useEffect(async () => {
-    fetch("https://localhost:7057/api/Announcements?pageSize=8", requestOptions)
-    .then((response2) => response2.json())
-    .then((data2) => {
-      console.log("data");
-      setAnnouncements(data2);
-    });
+  };
+  const loadAnnouncements = () => {
+    // fetch Announcements
     fetch(
-      "https://localhost:7057/api/Tickets?pageNumber=1&pageSize=8",
+      `https://localhost:7057/api/Announcements?pageNumber=${announcementsPageNumber}&pageSize=6`,
       requestOptions
     )
       .then((response) => response.json())
       .then((data) => {
-        setTickets(data);
+        setAnnouncements([...announcements, ...data.objects]);
+        if(data.objects.length < 6) {
+          setHasMoreAnnouncements(false)
+        }
       });
-  
+    setAnnouncementsPageNumber(announcementsPageNumber + 1);
+    
+  };
+  const loadTickets = () => {
+    // fetch Tickets
+    fetch(
+      `https://localhost:7057/api/Tickets?pageNumber=${ticketsPageNumber}&pageSize=8`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setTickets([...tickets, ...data.objects]);
+        if(data.objects.length < 6) {
+          setHasMoreTickets(false)
+        }
+      });
+    setTicketsPageNumber(ticketsPageNumber + 1);
+  };
+  useEffect(() => {
+    loadTickets();
+    loadAnnouncements();
   }, []);
   return (
     <Grid style={{ display: "flex" }}>
@@ -47,83 +66,115 @@ const Home = () => {
             flexWrap: "wrap",
           }}
         >
-          {tickets.totalCount === 0 ? (
+          {tickets.length === 0 ? (
             <h1>There is no opened Tickets right now.</h1>
           ) : (
-            tickets.objects.map((ticket, index) => {
-              return (
-                <Grid  key={index} xs={6} style={{ padding: "0 5px", marginBottom: "10px" }}>
-                  <div className="announcement-card">
-                    <div className="announcement-card-header">
-                      <Avatar
-                        alt="Remy Sharp"
-                        src="/static/images/avatar/1.jpg"
-                        style={{ marginRight: "5px" }}
-                      />
-                      <div>
-                        <h2>{ticket.creatorName}</h2>
-                        <h4>
-                          Employee at {ticket.creatorDepartmentName} departement
-                        </h4>
+            <InfiniteScroll
+              dataLength={tickets.length} //This is important field to render the next data
+              next={loadTickets}
+              hasMore={hasMoreTickets}
+              loader={<h4>Loading...</h4>}
+              style={{display:"flex", flexWrap:"wrap"}}
+
+              endMessage={
+                <p style={{ textAlign: "center", marginBottom:"25px" }}>
+                  <b>There is no more tickets.</b>
+                </p>
+              }
+            >
+              {tickets.map((ticket, index) => {
+                return (
+                  <Grid
+                    key={index}
+                    xs={6}
+                    style={{ padding: "0 5px", marginBottom: "10px" }}
+                  >
+                    <div className="announcement-card">
+                      <div className="announcement-card-header">
+                        <Avatar
+                          alt="Remy Sharp"
+                          src="/static/images/avatar/1.jpg"
+                          style={{ marginRight: "5px" }}
+                        />
+                        <div>
+                          <h2>{ticket.creatorName}</h2>
+                          <h4>
+                            Employee at {ticket.creatorDepartmentName}{" "}
+                            departement
+                          </h4>
+                        </div>
                       </div>
+                      <hr style={{ width: "40%", marginLeft: "0px" }} />
+                      <h3 style={{ color: "green" }}>
+                        Ticket Subject: {ticket.subject}
+                      </h3>
+                      <h4>Last Message: {ticket.lastMessage}</h4>
+                      <p style={{ margin: "0px", opacity: "0.7" }}>
+                        created at: {ticket.createdAt.split("T")[0]}
+                      </p>
                     </div>
-                    <hr style={{ width: "40%", marginLeft: "0px" }} />
-                    <h3 style={{ color: "green" }}>
-                      Ticket Subject: {ticket.subject}
-                    </h3>
-                    <h4>Last Message: {ticket.lastMessage}</h4>
-                    <p style={{ margin: "0px", opacity: "0.7" }}>
-                      created at: {ticket.createdAt.split("T")[0]}
-                    </p>
-                  </div>
-                </Grid>
-              );
-            })
+                  </Grid>
+                );
+              })}
+            </InfiniteScroll>
           )}
         </div>
       </Grid>
       <Grid xs={5} style={{ padding: "0 5px" }}>
+        <div style={{display:"flex", alignItems:"center", justifyContent:"center"}}> 
+
         <h1
           style={{
             textAlign: "center",
-            margin: "10px 0",
+            margin: "10px 10px 10px 0",
           }}
-        >
-          Announcements
+          >
+          Announcements 
         </h1>
-        {announcements.totalCount === 0 ? (
+        <CreateAnnouncement />
+          </div>
+        {announcements.length === 0 ? (
           <h1>There is no Announcements.</h1>
         ) : (
-          announcements.objects.map((announcement) => {
-            return (
-              <div className="announcement-card">
-                <div className="announcement-card-header">
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="/static/images/avatar/1.jpg"
-                    style={{ marginRight: "5px" }}
-                  />
-                  <div>
-                    <h2>Hamdy Youssef</h2>
-                    <h3>Senior Hr</h3>
-                    <p style={{ margin: "0px", opacity: "0.7" }}>
-                      {" "}
-                      13th jan 2022{" "}
-                    </p>
+          <InfiniteScroll
+            dataLength={tickets.length} //This is important field to render the next data
+            next={loadAnnouncements}
+            hasMore={hasMoreAnnouncements}
+            loader={<h4>Loading...</h4>}
+            endMessage={
+              <p style={{ textAlign: "center", marginBottom:"25px" }}>
+                <b>You have seen all the announcements</b>
+              </p>
+            }
+          >
+            {announcements.map((announcement,index) => {
+              return (
+                <div
+                  key={index}
+                  className="announcement-card"
+                  style={{ marginBottom: "15px" }}
+                >
+                  <div className="announcement-card-header">
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/1.jpg"
+                      style={{ marginRight: "5px" }}
+                    />
+                    <div>
+                      <h2>{announcement.authorName}</h2>
+                      {/* <h3>title or position</h3> */}
+                      <p style={{ margin: "0px", opacity: "0.7" }}>
+                        created at :{announcement.createdAt.split("T")[0]}
+                      </p>
+                    </div>
                   </div>
+                  <hr style={{ width: "40%", marginLeft: "0px" }} />
+                  <p>{announcement.content} </p>
                 </div>
-                <hr style={{ width: "40%", marginLeft: "0px" }} />
-                <p>
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Natus illum rerum exercitationem sed ab ipsam labore
-                  veritatis, voluptas nihil, tenetur quis et commodi id sequi ut
-                  cum quod, modi voluptatibus.
-                </p>
-              </div>
-            );
-          })
+              );
+            })}
+          </InfiniteScroll>
         )}
-        <CreateAnnouncement/>
       </Grid>
     </Grid>
   );
