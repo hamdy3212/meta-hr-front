@@ -21,13 +21,13 @@ const Home = () => {
   const loadAnnouncements = () => {
     // fetch Announcements
     fetch(
-      `https://localhost:7057/api/Announcements?pageNumber=${announcementsPageNumber}&pageSize=6`,
+      `https://localhost:7057/api/Announcements?pageNumber=${announcementsPageNumber}&pageSize=9`,
       requestOptions
     )
       .then((response) => response.json())
       .then((data) => {
         setAnnouncements([...announcements, ...data.objects]);
-        if(data.objects.length < 6) {
+        if(data.objects.length < 9) {
           setHasMoreAnnouncements(false)
         }
       });
@@ -37,13 +37,13 @@ const Home = () => {
   const loadTickets = () => {
     // fetch Tickets
     fetch(
-      `https://localhost:7057/api/Tickets?pageNumber=${ticketsPageNumber}&pageSize=8`,
+      `https://localhost:7057/api/Tickets?pageNumber=${ticketsPageNumber}&pageSize=10`,
       requestOptions
     )
       .then((response) => response.json())
       .then((data) => {
         setTickets([...tickets, ...data.objects]);
-        if(data.objects.length < 6) {
+        if(data.objects.length < 10) {
           setHasMoreTickets(false)
         }
       });
@@ -77,8 +77,8 @@ const Home = () => {
               style={{display:"flex", flexWrap:"wrap"}}
 
               endMessage={
-                <p style={{ textAlign: "center", marginBottom:"25px" }}>
-                  <b>There is no more tickets.</b>
+                <p style={{ textAlign: "center" }}>
+                  <b>There is no more opened tickets.</b>
                 </p>
               }
             >
@@ -142,7 +142,7 @@ const Home = () => {
             hasMore={hasMoreAnnouncements}
             loader={<h4>Loading...</h4>}
             endMessage={
-              <p style={{ textAlign: "center", marginBottom:"25px" }}>
+              <p style={{ textAlign: "center" }}>
                 <b>You have seen all the announcements</b>
               </p>
             }
