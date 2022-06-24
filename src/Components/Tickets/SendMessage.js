@@ -18,7 +18,7 @@ export default function SendMessage({ ticketId }) {
 
   const handleSubmit = async (event) => {
     if (content.length < 1) {
-      alert("you should enter your message!");
+      alert("Message can't be empty!");
       return;
     }
     event.preventDefault();
@@ -52,7 +52,7 @@ export default function SendMessage({ ticketId }) {
       <Grid item xs={9}>
         <TextField
           id="message"
-          label="message"
+          label="Message"
           onChange={(e) => setContent(e.target.value)}
           fullWidth
           rows={4}

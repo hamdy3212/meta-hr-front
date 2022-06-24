@@ -40,7 +40,7 @@ const Tickets = () => {
       width: 100,
       valueFormatter: statusFormatter,
     },
-    { field: "isAwaitingResponse", headerName: "Awaiting Response" },
+    { field: "isAwaitingResponse", headerName: "Awaiting Response?" },
     { field: "createdAt"}
   ]);
   // color for closed tickets
@@ -158,7 +158,7 @@ const Tickets = () => {
               onClick={closeOpenTicket}
               disabled={!ticketId}
             >
-              End Ticket
+              Close Ticket
             </Button>
           )}
         </div>
