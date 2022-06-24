@@ -41,8 +41,8 @@ const Tickets = () => {
       width: 100,
       valueFormatter: statusFormatter,
     },
-    { field: "isAwaitingResponse", headerName: "Awaiting Response" },
-    { field: "createdAt" },
+    { field: "isAwaitingResponse", headerName: "Awaiting Response?" },
+    { field: "createdAt"}
   ]);
   // color for closed tickets
   const rowClassRules = useMemo(() => {

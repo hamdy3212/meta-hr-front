@@ -92,8 +92,7 @@ const Home = () => {
                     <div className="announcement-card">
                       <div className="announcement-card-header">
                         <Avatar
-                          alt="Remy Sharp"
-                          src="/static/images/avatar/1.jpg"
+                          src={ticket.creatorPfpURL ? ticket.creatorPfpURL : "/static/images/avatar/1.jpg"}
                           style={{ marginRight: "5px" }}
                         />
                         <div>
@@ -156,8 +155,7 @@ const Home = () => {
                 >
                   <div className="announcement-card-header">
                     <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/1.jpg"
+                      src={announcement.authorPfpURL ? announcement.authorPfpURL : "/static/images/avatar/1.jpg"}
                       style={{ marginRight: "5px" }}
                     />
                     <div>

@@ -105,6 +105,9 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
           style={{ display: "flex", flexDirection: "column" }}
         >
           {messages.map((message) => {
+            let msgTimestamp = message.timestampUtc.substring(0, message.timestampUtc.lastIndexOf(":"));
+            msgTimestamp = msgTimestamp.replace("T", " ")
+            console.log(msgTimestamp);
             return (
               <div
                 style={{
@@ -114,6 +117,8 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
                   boxShadow: "1px 1px 5px lightblue",
                   boxShadow: "-1px -1px 5px lightblue",
                   fontFamily: "Arial, Helvetica, sans-serif",
+                  paddingTop: "10px",
+                  paddingBottom: "10px"
                 }}
                 className={`${
                   message.senderId === localStorage.getItem("userId")
@@ -132,23 +137,18 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
                 >
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/1.jpg"
-                      style={{ marginRight: "5px" }}
+                      src={message.senderPfpUrl ? message.senderPfpUrl : "/static/images/avatar/1.jpg"}
+                      style={{marginRight:"5px"}}
                     />
                     <h2>{message.senderName}</h2>
                   </div>
-                  <p style={{ opacity: 0.5 }}>
-                    {message.timestampUtc.split("T")[0]}
-                  </p>
+                  <p style={{ opacity: 0.5 }}>{msgTimestamp}</p>
                 </div>
-                <p
-                  style={{
-                    margin: "10px",
-                  }}
-                >
-                  {message.content}
-                </p>
+                <p 
+                style={
+                  {marginTop: "15px"}
+                }
+                >{message.content}</p>
               </div>
             );
           })}
