@@ -32,23 +32,19 @@ const PeopleList = () => {
             <p class="card__name">
               {employee.firstName + " " + employee.lastName}
             </p>
-            <div class="grid-container">
-              <div class="grid-child-departmentName">
-                {employee.departmentName}
-              </div>
-            </div>
+           
             <div class="grid-container">
               <div class="grid-child-title">{employee.title}</div>
+            </div>
+            <div class="grid-container">
+              <div class="grid-child-departmentName" style={{color:"#6C757D"}}>
+                {employee.departmentName}
+              </div>
             </div>
             <ul class="social-icons">
               <li>
                 <a href="#">
-                  <i class="fa fa-instagram"></i>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <i class="fa fa-twitter"></i>
+                  <i class="fa fa-github"></i>
                 </a>
               </li>
               <li>
@@ -58,11 +54,10 @@ const PeopleList = () => {
               </li>
               <li>
                 <a href="#">
-                  <i class="fa fa-codepen"></i>
+                  <i class="fa fa-globe"></i>
                 </a>
               </li>
             </ul>
-            <button class="btn draw-border">Message</button>
           </div>
         );
       })}

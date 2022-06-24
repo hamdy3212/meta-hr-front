@@ -111,7 +111,6 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
                   border: "1px solid grey",
                   margin: "5px",
                   borderRadius: "5px",
-                  padding: "0px 10px",
                   boxShadow: "1px 1px 5px lightblue",
                   boxShadow: "-1px -1px 5px lightblue",
                   fontFamily: "Arial, Helvetica, sans-serif",
@@ -127,20 +126,29 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    flexWrap:"wrap"
+                    flexWrap: "wrap",
+                    margin: "10px",
                   }}
                 >
-                  <div style={{display:"flex", alignItems:"center"}}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
                     <Avatar
                       alt="Remy Sharp"
                       src="/static/images/avatar/1.jpg"
-                      style={{marginRight:"5px"}}
+                      style={{ marginRight: "5px" }}
                     />
                     <h2>{message.senderName}</h2>
                   </div>
-                  <p style={{ opacity: 0.5 }}>{message.timestampUtc}</p>
+                  <p style={{ opacity: 0.5 }}>
+                    {message.timestampUtc.split("T")[0]}
+                  </p>
                 </div>
-                <p>{message.content}</p>
+                <p
+                  style={{
+                    margin: "10px",
+                  }}
+                >
+                  {message.content}
+                </p>
               </div>
             );
           })}
