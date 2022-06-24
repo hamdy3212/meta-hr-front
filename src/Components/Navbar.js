@@ -21,13 +21,13 @@ const ResponsiveAppBar = () => {
     if (localStorage.getItem("token")) {
       setPages([
         { label: "Home", url: "Home" },
-        { label: "Jobs", url: "Jobs" },
         { label: "Employees", url: "Employees" },
         { label: "Departments", url: "departments" },
       ]);
       if(localStorage.getItem("role") === "Admin"){
         setSettings([
           { label: "Create New Account", url: "Register" },
+          { label: "Jobs", url: "Jobs" },
           { label: "Add Job", url: "addJob" },
 
         ])
@@ -39,17 +39,16 @@ const ResponsiveAppBar = () => {
         setSettings([
           { label: "Tickets", url: "Tickets" },
           { label: "Add Job", url: "addJob" },
+          { label: "Jobs", url: "Jobs" },
           { label: "Create New Account", url: "Register" },
         ])
       }
     } else {
       setPages([
         { label: "Login", url: "login" },
-        { label: "Register", url: "resetpassword" },
       ]);
       setSettings([
         { label: "Login", url: "login" },
-        { label: "Register", url: "resetPassword" },
       ]);
     }
   }, [localStorage.getItem("token")]);

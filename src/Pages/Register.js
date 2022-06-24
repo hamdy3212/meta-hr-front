@@ -17,7 +17,7 @@ import InputLabel from "@mui/material/InputLabel";
 const theme = createTheme();
 
 
-const Roles = ["Employee", "HR_Senior", "HR_Junior", "DepartmentDirector"];
+const Roles = ["Employee", "HR_Senior", "HR_Junior"];
 function Register() {
   const [departments, setDepartments] = useState([])
   const requestOptions = {
@@ -188,13 +188,6 @@ function Register() {
             >
               Register
             </Button>
-            <Grid container>
-              <Grid item>
-                <Link href="login" variant="body2">
-                  Login
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>

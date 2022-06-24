@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -29,25 +29,17 @@ function Login() {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: data.get("email"),
-        password: data.get("password"),
-      }),
     };
     const response = await fetch(
-      "https://localhost:7057/api/Account/Login",
+      `https://localhost:7057/api/Account/ForgotPassword?email=${data.get(
+        "email"
+      )}`,
       requestOptions
     );
     if (response.status === 200) {
-      const data2 = await response.json();
-      console.log(data2)
-      localStorage.setItem("token", data2.localUserInfo.token);
-      localStorage.setItem("role", data2.localUserInfo.roles[0]);
-      localStorage.setItem("userId", data2.localUserInfo.id);
-
       navigate("/");
     } else {
-      alert("Email or Password is wrong!");
+      alert("Email is wrong!");
     }
   };
   return (
@@ -60,9 +52,8 @@ function Login() {
             alignItems: "center",
           }}
         >
-       
           <Typography component="h1" variant="h5">
-            Login
+            Forgot Password
           </Typography>
           <Box
             component="form"
@@ -81,32 +72,14 @@ function Login() {
               autoFocus
               dir="ltr"
             />
-            <TextField
-              dir="ltr"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Login
+              Reset Password
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="/forgotpassword" variant="body2">
-                  Forgot Password?
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
