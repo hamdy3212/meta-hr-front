@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { apiURL } from "../envvars";
 
 const theme = createTheme();
 
@@ -35,7 +36,7 @@ function Login() {
       }),
     };
     const response = await fetch(
-      "https://localhost:7057/api/Account/Login",
+      `${apiURL}/api/Account/Login`,
       requestOptions
     );
     if (response.status === 200) {
@@ -44,7 +45,7 @@ function Login() {
       localStorage.setItem("token", data2.localUserInfo.token);
       localStorage.setItem("role", data2.localUserInfo.roles[0]);
       localStorage.setItem("userId", data2.localUserInfo.id);
-
+      localStorage.setItem("userPfpUrl", data2.localUserInfo.profilePictureURL);
       navigate("/");
     } else {
       alert("Email or Password is wrong!");

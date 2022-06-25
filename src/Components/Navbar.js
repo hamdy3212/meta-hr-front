@@ -25,24 +25,21 @@ const ResponsiveAppBar = () => {
         { label: "Employees", url: "Employees" },
         { label: "Departments", url: "departments" },
       ]);
-      if(localStorage.getItem("role") === "Admin"){
+      if (localStorage.getItem("role") === "Admin") {
         setSettings([
-          { label: "Create New Account", url: "Register" },
+          { label: "Create New Employee Account", url: "CreateAccount" },
           { label: "Add Job", url: "addJob" },
-
-        ])
-      } else if (localStorage.getItem("role") === "Employee"){
-        setSettings([
-          { label: "Tickets", url: "Tickets" },
-        ])
+        ]);
+      } else if (localStorage.getItem("role") === "Employee") {
+        setSettings([{ label: "Tickets", url: "Tickets" }]);
       } else {
         setSettings([
           { label: "Tickets", url: "Tickets" },
           { label: "Add Job", url: "addJob" },
-          { label: "Create New Account", url: "Register" },
-        ])
+          { label: "Create New Employee Account", url: "CreateAccount" },
+        ]);
       }
-    } else {
+    } /*else {
       setPages([
         { label: "Login", url: "login" },
         { label: "Register", url: "resetpassword" },
@@ -51,7 +48,7 @@ const ResponsiveAppBar = () => {
         { label: "Login", url: "login" },
         { label: "Register", url: "resetPassword" },
       ]);
-    }
+    }*/
   }, [localStorage.getItem("token")]);
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -87,10 +84,14 @@ const ResponsiveAppBar = () => {
   };
   const logout = () => {
     setAnchorElUser(null);
-    localStorage.setItem("token", "");
-    localStorage.setItem("role", "");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userPfpUrl");
     navigate("login");
   };
+
+  const currUserPfpUrl = localStorage.getItem("userPfpUrl");
 
   return (
     <AppBar position="static">
@@ -171,7 +172,11 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                { localStorage.getItem("token") ? <Avatar
+                  src={
+                    currUserPfpUrl ? currUserPfpUrl : "/static/images/avatar/2.jpg"
+                  }
+                /> : null }
               </IconButton>
             </Tooltip>
             <Menu

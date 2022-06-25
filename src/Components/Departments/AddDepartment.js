@@ -10,6 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import { apiURL } from "../../envvars";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -76,7 +77,7 @@ export default function CustomizedDialogs() {
       }),
     };
     const response = await fetch(
-      "https://localhost:7057/api/Departments",
+      `${apiURL}/api/Departments`,
       requestOptions
     );
     if (response.status === 200) {

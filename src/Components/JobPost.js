@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { apiURL } from "../envvars";
 
 const theme = createTheme();
 
@@ -25,7 +26,7 @@ function JobPost() {
       }),
     };
     const response = await fetch(
-      "https://localhost:7057/api/JobPostings",
+      `${apiURL}/api/JobPostings`,
       requestOptions
     );
     if (response.status === 200) {

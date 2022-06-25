@@ -11,6 +11,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import AddAlertIcon from '@mui/icons-material/AddAlert';
+import { apiURL } from "../envvars";
+
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -83,7 +85,7 @@ export default function CustomizedDialogs() {
       }),
     };
     const response = await fetch(
-      "https://localhost:7057/api/Announcements/createGlobalAnnouncement",
+      `${apiURL}/api/Announcements/createGlobalAnnouncement`,
       requestOptions
     );
     if (response.status === 200) {

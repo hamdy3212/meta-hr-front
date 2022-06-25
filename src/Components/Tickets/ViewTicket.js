@@ -13,6 +13,7 @@ import TextField from "@mui/material/TextField";
 import DialogContentText from "@mui/material/DialogContentText";
 import SendMessage from "./SendMessage";
 import Avatar from "@mui/material/Avatar";
+import { apiURL } from "../../envvars";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -64,7 +65,7 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
       },
     };
     const response = await fetch(
-      `https://localhost:7057/api/Tickets/${ticketId}/messages`,
+      `${apiURL}/api/Tickets/${ticketId}/messages`,
       requestOptions
     );
     if (response.status === 200) {

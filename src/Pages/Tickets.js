@@ -13,6 +13,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { apiURL } from "../envvars";
 
 const Tickets = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
@@ -64,8 +65,8 @@ const Tickets = () => {
   useEffect(async () => {
     const url =
       (await localStorage.getItem("role")) === "Employee"
-        ? "https://localhost:7057/api/Tickets/myTickets"
-        : "https://localhost:7057/api/Tickets?pageNumber=1&pageSize=10";
+        ? `${apiURL}/api/Tickets/myTickets`
+        : `${apiURL}/api/Tickets?pageNumber=1&pageSize=10`;
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
@@ -86,7 +87,7 @@ const Tickets = () => {
       },
     };
     const response = await fetch(
-      `https://localhost:7057/api/Tickets/closeOrOpenTicket?ticketId=${ticketId}&isOpen=${!ticketStatus}`,
+      `${apiURL}/api/Tickets/closeOrOpenTicket?ticketId=${ticketId}&isOpen=${!ticketStatus}`,
       requestOptions
     );
       const index = rowData.findIndex((ticket)=>ticket.id === ticketId);

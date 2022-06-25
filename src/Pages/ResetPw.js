@@ -13,6 +13,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import { apiURL } from "../envvars";
 
 const theme = createTheme();
 function ResetPw() {
@@ -37,7 +38,7 @@ function ResetPw() {
       }),
     };
     const response = await fetch(
-      "https://localhost:7057/api/Account/ResetPassword",
+      `${apiURL}/api/Account/ResetPassword`,
       requestOptions
     );
     if (response.status === 200) {
