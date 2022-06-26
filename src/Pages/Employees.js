@@ -43,21 +43,21 @@ const PeopleList = () => {
               </div>
             </div>
             <ul class="social-icons">
-              <li>
-                <a href="#">
+              {employee.gitHubURL ? <li>
+                <a href={employee.gitHubURL}>
                   <i class="fa fa-github"></i>
                 </a>
-              </li>
-              <li>
-                <a href="#">
+              </li> : null}
+              {employee.linkedInURL ? <li>
+                <a href={employee.linkedInURL}>
                   <i class="fa fa-linkedin"></i>
                 </a>
-              </li>
-              <li>
-                <a href="#">
+              </li> : null}
+              {employee.personalWebsite ? <li>
+                <a href={employee.personalWebsite}>
                   <i class="fa fa-globe"></i>
                 </a>
-              </li>
+              </li> : null}
             </ul>
           </div>
         );
