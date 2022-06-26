@@ -10,7 +10,7 @@ const ErrorsDisplayer = ({ errors }) => {
         }}
       >
         {errors.map((err) => (
-          <p style={{ marginBottom: "6px" }}>
+          <p key={err} style={{ marginBottom: "6px" }}>
             {err}
             <br />
           </p>

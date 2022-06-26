@@ -4,7 +4,24 @@ export let swalShow = (title, content, icon) => {
     Swal.fire({
         title: title,
         text: content,
-        icon: icon,
+        icon: icon
+    });
+}
+
+let swalShowHtml = (title, html, icon) => {
+    Swal.fire({
+        title: title,
+        html: html,
+        icon: icon
+    });
+}
+
+export let swalShowErrors = (title, errors) => {
+    const formattedErrors = errors.join("<br/>");
+    Swal.fire({
+        title: title,
+        html: formattedErrors,
+        icon: "error"
     });
 }
 
