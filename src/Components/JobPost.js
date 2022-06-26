@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
@@ -7,21 +7,28 @@ import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { apiURL } from "../envvars";
+import * as ReactQuill from 'react-quill'; // Typescript
+import 'react-quill/dist/quill.snow.css'; // ES6
 
 const theme = createTheme();
 
 function JobPost() {
   const navigate = useNavigate();
+  const [text, setText] = useState("");
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    console.log(text);
     // eslint-disable-next-line no-console
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+     },
       body: JSON.stringify({
         title: data.get("title"),
-        descriptionHtml: data.get("descriptionHtml"),
+        descriptionHtml: text,
         category: data.get("category"),
       }),
     };
@@ -69,7 +76,7 @@ function JobPost() {
               autoFocus
               dir="ltr"
             />
-            <TextField
+            {/* <TextField
               dir="ltr"
               margin="normal"
               required
@@ -79,7 +86,12 @@ function JobPost() {
               type="descriptionHtml"
               id="descriptionHtml"
               autoComplete="descriptionHtml"
-            />
+            /> */}
+                  <ReactQuill value={text}
+                                name="descriptionHtml"
+                                style={{height:"300px",marginBottom:"50px"}}
+                  onChange={(e)=>setText(e)}
+                />
             <TextField
               dir="ltr"
               margin="normal"

@@ -1,6 +1,9 @@
 import Login from "./Pages/Login.js";
+import ForgotPassord from "./Pages/ForgotPassword.js";
 import ResetPw from "./Pages/ResetPw.js";
 import CreateAccount from "./Pages/CreateAccount.js";
+import Onboard from "./Pages/Onboard.js";
+import Applications from "./Pages/Applications.js";
 import Home from "./Pages/Home.js";
 import Jobs from "./Components/Jobs.js";
 import JobPost from "./Components/JobPost.js";
@@ -24,14 +27,15 @@ function App() {
             <Route path="/employees" element={<Employees />} />
             <Route path="/departments" element={<Departments />} />
             <Route path="/tickets" element={<Tickets />} />
-            <Route
-              path="/createAccount"
-              element={<CreateAccount />}
-            />
+            <Route path="/createAccount" element={<CreateAccount />} />
+            <Route path="/jobs" element={<Jobs />} />
+            <Route path="/applications" element={<Applications />} />
           </Route>
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/resetpassword" element={<ResetPw />} />
+
+        <Route path="/onboard" element={<Onboard />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgotpassword" element={<ForgotPassord />} />
+        <Route path="/account/resetPassword" element={<ResetPw />} />
         </Routes>
       </BrowserRouter>
   );

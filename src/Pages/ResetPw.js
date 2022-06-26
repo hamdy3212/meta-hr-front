@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -17,6 +17,10 @@ import { apiURL } from "../envvars";
 
 const theme = createTheme();
 function ResetPw() {
+  let queryParams = new URLSearchParams(document.location.search);
+  let userId = queryParams.get("userId");
+  let token = queryParams.get("token");
+  const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -26,14 +30,21 @@ function ResetPw() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    if (data.get("password").length < 6) {
+      setErrors(["Password must be at least 6 characters."]);
+      return;
+    }
+    if (data.get("password") !== data.get("password2")) {
+      setErrors(["Password doesn't match."]);
+      return;
+    }
     // eslint-disable-next-line no-console
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json",
-    },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: data.get("userId"),
-        resetPasswordToken: data.get("resetPasswordToken"),
+        userId: userId,
+        resetPasswordToken: token,
         password: data.get("password"),
       }),
     };
@@ -41,12 +52,12 @@ function ResetPw() {
       `${apiURL}/api/Account/ResetPassword`,
       requestOptions
     );
+    const data2 = await response.json();
     if (response.status === 200) {
-      const data2 = await response.json();
       console.log(data2);
       alert("Password Created Successfully!");
     } else {
-      alert("Something is wrong!");
+      setErrors(data2.errors);
     }
   };
   return (
@@ -60,7 +71,7 @@ function ResetPw() {
           }}
         >
           <Typography component="h1" variant="h5">
-            Register
+            Reset Your Password
           </Typography>
           <Box
             component="form"
@@ -69,17 +80,6 @@ function ResetPw() {
             sx={{ mt: 1 }}
           >
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="userId"
-              label="User Id"
-              name="userId"
-              autoComplete="userId"
-              autoFocus
-              dir="ltr"
-            />
-                <TextField
               margin="normal"
               required
               fullWidth
@@ -94,12 +94,14 @@ function ResetPw() {
               margin="normal"
               required
               fullWidth
-              id="resetPasswordToken"
-              label="Reset Password Token"
-              name="resetPasswordToken"
+              id="Password"
+              label="Confirm Password"
+              name="password2"
+              type="password"
               autoFocus
               dir="ltr"
             />
+            {errors && <p style={{ color: "red" }}>{errors[0]}</p>}
             <Button
               type="submit"
               fullWidth
@@ -110,7 +112,7 @@ function ResetPw() {
             </Button>
             <Grid container>
               <Grid item>
-                <Link href="login" variant="body2">
+                <Link href="/login" variant="body2">
                   Login
                 </Link>
               </Grid>

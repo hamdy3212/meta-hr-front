@@ -115,7 +115,6 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
                   border: "1px solid grey",
                   margin: "5px",
                   borderRadius: "5px",
-                  padding: "0px 10px",
                   boxShadow: "1px 1px 5px lightblue",
                   boxShadow: "-1px -1px 5px lightblue",
                   fontFamily: "Arial, Helvetica, sans-serif",
@@ -133,10 +132,11 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    flexWrap:"wrap"
+                    flexWrap: "wrap",
+                    margin: "10px",
                   }}
                 >
-                  <div style={{display:"flex", alignItems:"center"}}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
                     <Avatar
                       src={message.senderPfpUrl ? message.senderPfpUrl : "/static/images/avatar/1.jpg"}
                       style={{marginRight:"5px"}}

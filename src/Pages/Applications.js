@@ -3,10 +3,7 @@ import Button from "@mui/material/Button";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-
-import CreateTicket from "../Components/Tickets/CreateTicket";
-import SendMessage from "../Components/Tickets/SendMessage";
-import ViewTicket from "../Components/Tickets/ViewTicket";
+import ViewApplication from "../Components/Applications/ViewApplication";
 import React, {
   useState,
   useEffect,
@@ -14,60 +11,45 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { apiURL } from "../envvars";
 
-const Tickets = () => {
+const Applications = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
   const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
   const [URL, setURL] = useState("");
-  const [ticketId, setTicketId] = useState("");
-  const [ticketStatus, setTicketStatus] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState("");
-  const statusFormatter = (params) => {
-    if (params.value) {
-      return "Open";
-    } else {
-      return "Closed";
-    }
-  };
+  const [applicationId, setApplicationId] = useState("");
+  const [selectedApplication, setSelectedApplication] = useState("");
+  
   const [columnDefs, setColumnDefs] = useState([
     { field: "id", width: 60 },
-    { field: "creatorName" },
-    { field: "subject" },
-    { field: "lastMessage", resizable: true },
-    { field: "creatorDepartmentName", headerName: "Department", width: 120 },
-    {
-      field: "isOpen",
-      headerName: "Status",
-      width: 100,
-      valueFormatter: statusFormatter,
-    },
-    { field: "isAwaitingResponse", headerName: "Awaiting Response?" },
-    { field: "createdAt"}
+    { field: "jobTitle" },
+    { field: "stage" },
+    { field: "firstName"},
+    { field: "lastName"},
+    { field: "email"},
+    { field: "phone"},
+    
+    // { field: "creatorDepartmentName", headerName: "Department", width: 120 },
+   
   ]);
-  // color for closed tickets
+  // color for closed applications
   const rowClassRules = useMemo(() => {
     return {
-      closedTicket: "data.isOpen === false",
+      unread: "data.stage === unread",
     };
   }, []);
   const onSelectionChanged = useCallback(() => {
     const selectedRows = gridRef.current.api.getSelectedRows();
-    setTicketId(selectedRows[0].id);
-    setTicketStatus(selectedRows[0].isOpen);
-    setSelectedTicket(selectedRows[0]);
+    setApplicationId(selectedRows[0].id);
+    setSelectedApplication(selectedRows[0]);
   }, []);
   const requestOptions = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  }; // fetch Tickets
+  }; // fetch Applications
   useEffect(async () => {
-    const url =
-      (await localStorage.getItem("role")) === "Employee"
-        ? `${apiURL}/api/Tickets/myTickets`
-        : `${apiURL}/api/Tickets?pageNumber=1&pageSize=999`;
+    const url = "https://localhost:7057/api/JobApplications?pageNumber=1&pageSize=10"
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
@@ -79,29 +61,24 @@ const Tickets = () => {
         }
       });
   }, []);
-  const closeOpenTicket = async () => {
+  const Delete = async () => {
     const requestOptions = {
-      method: "POST",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     };
     const response = await fetch(
-      `${apiURL}/api/Tickets/closeOrOpenTicket?ticketId=${ticketId}&isOpen=${!ticketStatus}`,
+      `https://localhost:7057/api/JobApplications/${applicationId}`,
       requestOptions
     );
-    const index = rowData.findIndex((ticket) => ticket.id === ticketId);
+    const index = rowData.findIndex((application) => application.id === applicationId);
     console.log(index);
-    const tickets = rowData;
-    tickets[index].isOpen = !ticketStatus;
-    setRowData(tickets);
+    const applications = rowData;
+    setRowData(applications);
     gridRef.current.api.refreshCells();
-    if (ticketStatus) {
-      alert(`Ticket is closed`);
-    } else {
-      alert(`Ticket is opened`);
-    }
+    alert("Application Deleted.")
   };
   return (
     <div
@@ -141,30 +118,18 @@ const Tickets = () => {
           flexDirection: "row",
         }}
       >
-        {localStorage.getItem("role") === "Employee" ? <CreateTicket /> : ""}
-        <ViewTicket ticketId={ticketId} selectedTicket={selectedTicket} />
-        {ticketStatus === false ? (
-          <Button
-            variant="contained"
-            color="success"
-            onClick={closeOpenTicket}
-            disabled={!ticketId}
-          >
-            Open Ticket
-          </Button>
-        ) : (
+        <ViewApplication applicationId={applicationId} selectedApplication={selectedApplication} />
           <Button
             variant="contained"
             color="error"
-            onClick={closeOpenTicket}
-            disabled={!ticketId}
+            onClick={Delete}
+            disabled={!applicationId}
           >
-            End Ticket
+            Delete Application
           </Button>
-        )}
       </div>
     </div>
   );
 };
 
-export default Tickets;
+export default Applications;
