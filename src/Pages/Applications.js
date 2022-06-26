@@ -39,7 +39,6 @@ const Applications = () => {
   }, []);
   const onSelectionChanged = useCallback(() => {
     const selectedRows = gridRef.current.api.getSelectedRows();
-    setApplicationId(selectedRows[0].id);
     setSelectedApplication(selectedRows[0]);
   }, []);
   const requestOptions = {
@@ -49,11 +48,10 @@ const Applications = () => {
     },
   }; // fetch Applications
   useEffect(async () => {
-    const url = "https://localhost:7057/api/JobApplications?pageNumber=1&pageSize=10"
+    const url = "https://localhost:7057/api/JobApplications?pageNumber=1&pageSize=999"
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
-        console.log(rowData);
         if (localStorage.getItem("role") === "Employee") {
           setRowData(rowData);
         } else {
@@ -70,11 +68,10 @@ const Applications = () => {
       },
     };
     const response = await fetch(
-      `https://localhost:7057/api/JobApplications/${applicationId}`,
+      `https://localhost:7057/api/JobApplications/${selectedApplication.id}`,
       requestOptions
     );
-    const index = rowData.findIndex((application) => application.id === applicationId);
-    console.log(index);
+    const index = rowData.findIndex((application) => application.id === selectedApplication.id);
     const applications = rowData;
     setRowData(applications);
     gridRef.current.api.refreshCells();
@@ -118,12 +115,12 @@ const Applications = () => {
           flexDirection: "row",
         }}
       >
-        <ViewApplication applicationId={applicationId} selectedApplication={selectedApplication} />
+        <ViewApplication selectedApplication={selectedApplication} />
           <Button
             variant="contained"
             color="error"
             onClick={Delete}
-            disabled={!applicationId}
+            disabled={!selectedApplication}
           >
             Delete Application
           </Button>

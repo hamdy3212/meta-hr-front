@@ -24,7 +24,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
- 
 
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
@@ -51,39 +50,41 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function ViewApplication() {
+export default function ViewApplication({ selectedApplication }) {
   const [open, setOpen] = React.useState(false);
-
+  const [CV, setCV] = React.useState("");
   const handleClickOpen = async () => {
     setOpen(true);
-    // const requestOptions = {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: "Bearer " + localStorage.getItem("token"),
-    //   },
-    // };
-    // const response = await fetch(
-    //   `https://localhost:7057/api/Tickets/${ticketId}/messages`,
-    //   requestOptions
-    // );
-    // if (response.status === 200) {
-    //   const data2 = await response.json();
-    //   console.log(data2);
-    //   setMessages(data2);
-    // } else {
-    //   alert("something is wrong!");
-    // }
+    // console.log(selectedApplication);
   };
   const handleClose = () => {
     setOpen(false);
   };
+  const GetCV = async () => {
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    };
+    const response = await fetch(
+      `https://localhost:7057/api/JobApplications/${selectedApplication.id}/cvURL`,
+      requestOptions
+    );
+    console.log(response);
+    if (response.status === 200) {
+      setCV(response.url);
+    } else {
+      alert("something is wrong!");
+    }
+  }
   return (
     <div>
       <Button
         variant="contained"
         color="success"
-        // disabled={!applicationId}
+        disabled={!selectedApplication.id}
         onClick={handleClickOpen}
       >
         View Application
@@ -104,11 +105,29 @@ export default function ViewApplication() {
           dividers
           style={{ display: "flex", flexDirection: "column" }}
         >
-         <h1>Application content</h1>
+          <span>id: {selectedApplication.id}</span>
+          <span>jobPostingId: {selectedApplication.jobPostingId}</span>
+          <span>jobTitle: {selectedApplication.jobTitle}</span>
+          <span>receivedOnUtc :{selectedApplication.receivedOnUtc}</span>
+          <span>stage: {selectedApplication.stage}</span>
+          <span>firstName: {selectedApplication.firstName}</span>
+          <span>lastName: {selectedApplication.lastName}</span>
+          <span>email: {selectedApplication.email}</span>
+          <span>phone: {selectedApplication.phone}</span>
+          <span>linkedInURL: {selectedApplication.linkedInURL}</span>
+          <span>gitHubURL: {selectedApplication.gitHubURL}</span>
+          <span>personalWebsite: {selectedApplication.personalWebsite}</span>
+
+          {CV && <a href={CV} target="_blank">CV</a>}
         </DialogContent>
         <DialogActions>
-          <Button> Click Me </Button>
-            </DialogActions>
+          <Button varinat="contained" color="success" onClick={GetCV}>
+            Get CV
+          </Button>
+          <Button variant="contained" color="error">
+            Close
+          </Button>
+        </DialogActions>
       </BootstrapDialog>
     </div>
   );
