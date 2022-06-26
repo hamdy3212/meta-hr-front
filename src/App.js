@@ -3,7 +3,7 @@ import ForgotPassord from "./Pages/ForgotPassword.js";
 import ResetPw from "./Pages/ResetPw.js";
 import Register from "./Pages/Register.js";
 import Onboard from "./Pages/Onboard.js";
-
+import Applications from "./Pages/Applications.js";
 import Home from "./Pages/Home.js";
 import Jobs from "./Components/Jobs.js";
 import JobPost from "./Components/JobPost.js";
@@ -29,6 +29,8 @@ function App() {
           <Route path="/tickets" element={<Tickets />} />
           <Route path="/register" element={<Register />} />
           <Route path="/jobs" element={<Jobs />} />
+          <Route path="/applications" element={<Applications />} />
+
         </Route>
         <Route path="/onboard" element={<Onboard />} />
         <Route path="/login" element={<Login />} />

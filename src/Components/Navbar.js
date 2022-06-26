@@ -23,6 +23,11 @@ const ResponsiveAppBar = () => {
         { label: "Home", url: "Home" },
         { label: "Employees", url: "Employees" },
         { label: "Departments", url: "departments" },
+        { label: "Jobs", url: "Jobs" },
+        { label: "Tickets", url: "Tickets" },
+        { label: "Applications", url: "applications" },
+
+
       ]);
       if(localStorage.getItem("role") === "Admin"){
         setSettings([
@@ -37,9 +42,7 @@ const ResponsiveAppBar = () => {
         ])
       } else {
         setSettings([
-          { label: "Tickets", url: "Tickets" },
           { label: "Add Job", url: "addJob" },
-          { label: "Jobs", url: "Jobs" },
           { label: "Create New Account", url: "Register" },
         ])
       }
