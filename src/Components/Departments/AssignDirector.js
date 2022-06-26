@@ -13,6 +13,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import { apiURL } from "../../envvars";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -72,7 +73,7 @@ export default function CustomizedDialogs({ departmentId }) {
     };
     console.log(departmentId, employeeId);
     const response = await fetch(
-      `https://localhost:7057/api/Departments/${departmentId}/assignDirector?directorId=${employeeId}`,
+      `${apiURL}/api/Departments/${departmentId}/assignDirector?directorId=${employeeId}`,
       requestOptions
     );
     if (response.status === 200) {
@@ -90,7 +91,7 @@ export default function CustomizedDialogs({ departmentId }) {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     };
-    fetch("https://localhost:7057/api/Employees", requestOptions)
+    fetch(`${apiURL}/api/Employees`, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
         const depEmployees = rowData.filter((employee)=>{

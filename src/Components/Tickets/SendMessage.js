@@ -11,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
+import { apiURL } from "../../envvars";
 
 export default function SendMessage({ ticketId }) {
   const [subject, setSubject] = useState("");
@@ -31,7 +32,7 @@ export default function SendMessage({ ticketId }) {
       },
     };
     const response = await fetch(
-      `https://localhost:7057/api/Tickets/createMessage?ticketId=${ticketId}&content=${content}&isInternalNote=false`,
+      `${apiURL}/api/Tickets/createMessage?ticketId=${ticketId}&content=${content}&isInternalNote=false`,
       requestOptions
     );
     if (response.status === 200) {

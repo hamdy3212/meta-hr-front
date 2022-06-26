@@ -16,6 +16,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import AddDepartment from "../Components/Departments/AddDepartment";
 import AssignDirector from "../Components/Departments/AssignDirector";
+import { apiURL } from "../envvars";
 
 export const Departments = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
@@ -38,7 +39,7 @@ export const Departments = () => {
       },
     };
     const response = await fetch(
-      `https://localhost:7057/api/Departments/${departmentId}`,
+      `${apiURL}/api/Departments/${departmentId}`,
       requestOptions
     );
   };
@@ -56,7 +57,7 @@ export const Departments = () => {
     },
   }; // fetch departments
   useEffect(() => {
-    fetch("https://localhost:7057/api/Departments", requestOptions)
+    fetch(`${apiURL}/api/Departments`, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
         setRowData(rowData);

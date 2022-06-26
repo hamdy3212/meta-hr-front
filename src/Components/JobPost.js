@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { apiURL } from "../envvars";
 import * as ReactQuill from 'react-quill'; // Typescript
 import 'react-quill/dist/quill.snow.css'; // ES6
 
@@ -32,7 +33,7 @@ function JobPost() {
       }),
     };
     const response = await fetch(
-      "https://localhost:7057/api/JobPostings",
+      `${apiURL}/api/JobPostings`,
       requestOptions
     );
     if (response.status === 200) {

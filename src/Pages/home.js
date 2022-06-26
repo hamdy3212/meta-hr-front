@@ -3,8 +3,9 @@ import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
 import CreateAnnouncement from "../Components/createAnnouncement";
 import InfiniteScroll from "react-infinite-scroll-component";
-
 import "./Home.css";
+import { apiURL } from "../envvars";
+
 const Home = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsPageNumber, setAnnouncementsPageNumber] = useState(1);
@@ -21,7 +22,7 @@ const Home = () => {
   const loadAnnouncements = () => {
     // fetch Announcements
     fetch(
-      `https://localhost:7057/api/Announcements?pageNumber=${announcementsPageNumber}&pageSize=9`,
+      `${apiURL}/api/Announcements?pageNumber=${announcementsPageNumber}&pageSize=9`,
       requestOptions
     )
       .then((response) => response.json())
@@ -37,7 +38,7 @@ const Home = () => {
   const loadTickets = () => {
     // fetch Tickets
     fetch(
-      `https://localhost:7057/api/Tickets?pageNumber=${ticketsPageNumber}&pageSize=10`,
+      `${apiURL}/api/Tickets?pageNumber=${ticketsPageNumber}&pageSize=10`,
       requestOptions
     )
       .then((response) => response.json())

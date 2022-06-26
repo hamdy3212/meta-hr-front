@@ -4,7 +4,6 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -13,27 +12,36 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import { apiURL } from "../envvars";
+import ErrorsDisplayer from "../Components/ErrorsDisplayer";
+import { Router } from "@material-ui/icons";
+import { swalShow, swalToast } from '../Utility/swal';
 
 const theme = createTheme();
 
-
-const Roles = ["Employee", "HR_Senior", "HR_Junior"];
-function Register() {
-  const [departments, setDepartments] = useState([])
+const Roles = [
+  { val: "Employee", display: "Employee" },
+  { val: "HR_Junior", display: "HR Junior" },
+  { val: "HR_Senior", display: "HR Senior" },
+];
+function CreateAccount() {
+  const [departments, setDepartments] = useState([]);
   const requestOptions = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  }; // fetch departments
+  };
+  const [errors, setErrors] = useState([]);
+  // fetch departments
   useEffect(() => {
-    fetch("https://localhost:7057/api/Departments", requestOptions)
+    fetch(`${apiURL}/api/Departments`, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
         setDepartments(rowData);
       });
   }, []);
-  // const navigate = useNavigate();
+  //const navigate = useNavigate();
   // useEffect(() => {
   //   if (localStorage.getItem("token")) {
   //     navigate("/");
@@ -45,9 +53,10 @@ function Register() {
     // eslint-disable-next-line no-console
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       body: JSON.stringify({
         firstName: data.get("firstname"),
         lastName: data.get("lastname"),
@@ -55,20 +64,17 @@ function Register() {
         role: data.get("role"),
         title: data.get("title"),
         departmentId: data.get("department"),
-        dateOfBirth: "2022-05-16T12:33:26.531Z",
-        dateHired: "2022-05-16T12:33:26.531Z",
+        dateOfBirth: data.get("dateOfBirth"),
+        dateHired: data.get("dateHired")
       }),
     };
-    const response = await fetch(
-      "https://localhost:7057/api/Employees",
-      requestOptions
-    );
+    const response = await fetch(`${apiURL}/api/Employees`, requestOptions);
     if (response.status === 200) {
-      const data2 = await response.json();
-      console.log(data2);
-      alert("Account Was Created Successfully!");
+      const respJson = await response.json();
+      swalShow("Account Created Successfully!", "", "success");
     } else {
-      alert("Something is wrong!");
+      const respJson = await response.json();
+      setErrors(respJson.errors);
     }
   };
   return (
@@ -82,7 +88,7 @@ function Register() {
           }}
         >
           <Typography component="h1" variant="h5">
-            Register
+            Create New Employee Account
           </Typography>
           <Box
             component="form"
@@ -95,7 +101,7 @@ function Register() {
               required
               fullWidth
               id="firstname"
-              label="first name"
+              label="First Name"
               name="firstname"
               autoComplete="firstname"
               autoFocus
@@ -106,7 +112,7 @@ function Register() {
               required
               fullWidth
               id="lastname"
-              label="last name"
+              label="Last Name"
               name="lastname"
               autoComplete="lastname"
               autoFocus
@@ -122,6 +128,30 @@ function Register() {
               autoComplete="email"
               autoFocus
               dir="ltr"
+            />
+            <TextField
+              type="date"
+              label="Date of Birth"
+              id="dateOfBirth"
+              name="dateOfBirth"
+              required
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              style={{ marginTop: "16px", marginBottom: "8px" }}
+            />
+            <TextField
+              type="date"
+              label="Date Hired"
+              id="dateHired"
+              name="dateHired"
+              required
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              style={{ marginTop: "16px", marginBottom: "8px" }}
             />
             <TextField
               margin="normal"
@@ -172,21 +202,24 @@ function Register() {
                 <em>None</em>
               </MenuItem> */}
                     {Roles.map((Role) => (
-                      <MenuItem key={Role} value={Role}>
-                        {Role}
+                      <MenuItem key={Role.val} value={Role.val}>
+                        {Role.display}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
             </Grid>
+            <div style={{marginTop: "16px"}}>
+              <ErrorsDisplayer errors={errors} />
+            </div>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Register
+              Create Account
             </Button>
           </Box>
         </Box>
@@ -195,4 +228,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default CreateAccount;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { apiURL } from "../envvars"
 
 const PeopleList = () => {
   const [employees, setEmployees] = useState([]);
@@ -9,7 +10,7 @@ const PeopleList = () => {
     },
   }; // fetch departments
   useEffect(() => {
-    fetch("https://localhost:7057/api/Employees", requestOptions)
+    fetch(`${apiURL}/api/Employees`, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
         console.log(rowData);

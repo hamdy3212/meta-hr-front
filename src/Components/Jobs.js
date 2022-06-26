@@ -7,6 +7,7 @@ import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import { apiURL } from "../envvars";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -22,7 +23,7 @@ const Jobs = () => {
   };
 
   useEffect(() => {
-    fetch(`  https://localhost:7057/api/JobPostings`)
+    fetch(`${apiURL}/api/JobPostings`)
       .then((response) => {
         return response.json();
       })
