@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import ErrorsDisplayer from '../Components/ErrorsDisplayer'
 
 const theme = createTheme();
 
@@ -21,6 +22,8 @@ function Login() {
       navigate("/");
     }
   });
+  
+  const [errs, setErrs] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,12 +42,13 @@ function Login() {
     if (response.status === 200) {
       navigate("/");
     } else {
-      alert("Email is wrong!");
+      const respJson = await response.json();
+      setErrs(respJson.errors);
     }
   };
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" style={{ marginTop: "50px" }}>
+      <Container component="main" minWidth="xs" maxWidth="xs" style={{ marginTop: "50px" }}>
         <Box
           sx={{
             display: "flex",
@@ -78,8 +82,9 @@ function Login() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Reset Password
+              Send Password Reset Link
             </Button>
+            <ErrorsDisplayer errors={errs} />
           </Box>
         </Box>
       </Container>

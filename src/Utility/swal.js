@@ -41,3 +41,17 @@ export let swalToast = (title, icon, timer = 5000) => {
         }
     })
 }
+
+export let swalConfirm = (title, text, icon) => {
+    return new Promise(resolve => {
+        Swal.fire({
+            title,
+            text,
+            icon,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+        }).then((result) => {
+            resolve(result.isConfirmed);
+        })
+    });
+}
