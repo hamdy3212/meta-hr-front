@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -11,17 +11,19 @@ import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { apiURL } from "../envvars";
+import ErrorDisplayer from '../Components/ErrorsDisplayer'
 
 const theme = createTheme();
 
 function Login() {
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
     }
   });
+  const [loginErrs, setLoginErrs] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,7 +50,8 @@ function Login() {
       localStorage.setItem("userPfpUrl", data2.localUserInfo.profilePictureURL);
       navigate("/");
     } else {
-      alert("Email or Password is wrong!");
+      const respJson = await response.json();
+      setLoginErrs(respJson.errors);
     }
   };
   return (
@@ -93,6 +96,7 @@ function Login() {
               id="password"
               autoComplete="current-password"
             />
+            <ErrorDisplayer errors={loginErrs}/>
             <Button
               type="submit"
               fullWidth

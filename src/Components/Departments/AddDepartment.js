@@ -11,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { apiURL } from "../../envvars";
+import { swalToast } from '../../Utility/swal'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -81,12 +82,12 @@ export default function CustomizedDialogs() {
       requestOptions
     );
     if (response.status === 200) {
-      const data2 = await response.json();
-      console.log(data2);
-      alert("Department was addedd successfully");
+      swalToast("Departmend added successfully", "success");
       setOpen(false);
     } else {
-      alert("something is wrong!");
+      const respJson = await response.json();
+      swalToast(respJson.errors.join(" "), "error");
+      setOpen(false);
     }
   };
   return (

@@ -14,6 +14,7 @@ import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import { apiURL } from "../../envvars";
+import { swalToast } from '../../Utility/swal'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -77,11 +78,12 @@ export default function CustomizedDialogs({ departmentId }) {
       requestOptions
     );
     if (response.status === 200) {
-      const data2 = await response.json();
-      alert("assigned successfully");
+      swalToast("Director assigned successfully.", "success");
       setOpen(false);
     } else {
-      alert("something is wrong!");
+      const respJson = await response.json();
+      swalToast(respJson.errors.join(" "), "error");
+      setOpen(false);
     }
   };
   const handleClickOpen = () => {

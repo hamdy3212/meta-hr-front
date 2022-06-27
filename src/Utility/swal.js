@@ -4,7 +4,24 @@ export let swalShow = (title, content, icon) => {
     Swal.fire({
         title: title,
         text: content,
-        icon: icon,
+        icon: icon
+    });
+}
+
+let swalShowHtml = (title, html, icon) => {
+    Swal.fire({
+        title: title,
+        html: html,
+        icon: icon
+    });
+}
+
+export let swalShowErrors = (title, errors) => {
+    const formattedErrors = errors.join("<br/>");
+    Swal.fire({
+        title: title,
+        html: formattedErrors,
+        icon: "error"
     });
 }
 
@@ -23,4 +40,18 @@ export let swalToast = (title, icon, timer = 5000) => {
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
     })
+}
+
+export let swalConfirm = (title, text, icon) => {
+    return new Promise(resolve => {
+        Swal.fire({
+            title,
+            text,
+            icon,
+            showCancelButton: true,
+            confirmButtonText: `Confirm`,
+        }).then((result) => {
+            resolve(result.isConfirmed);
+        })
+    });
 }

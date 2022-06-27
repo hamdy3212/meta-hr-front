@@ -17,6 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddDepartment from "../Components/Departments/AddDepartment";
 import AssignDirector from "../Components/Departments/AssignDirector";
 import { apiURL } from "../envvars";
+import { swalConfirm, swalToast, swalShowErrors } from "../Utility/swal";
 
 export const Departments = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
@@ -31,6 +32,16 @@ export const Departments = () => {
 
   // delete department
   const deleteDepartment = async () => {
+    const selectedDep = rowData.filter((o) => o.id === departmentId);
+    const depName = selectedDep[0].name;
+    const confirmed = await swalConfirm(
+      `Are you sure you want to delete the ${depName} department?`,
+      "",
+      "warning"
+    );
+    if (!confirmed) {
+      return;
+    }
     const requestOptions = {
       method: "DELETE",
       headers: {
@@ -42,12 +53,19 @@ export const Departments = () => {
       `${apiURL}/api/Departments/${departmentId}`,
       requestOptions
     );
+
+    if (response.status === 200) {
+      swalToast("Department deleted successfully.");
+    } else {
+      const respJson = await response.json();
+      swalShowErrors("Error", respJson.errors);
+    }
   };
   const onSelectionChanged = useCallback(() => {
     const selectedRows = gridRef.current.api.getSelectedRows();
     selectedRows.length === 1
       ? setDepartmentId(selectedRows[0].id)
-      : alert("Select only on department");
+      : alert("Select only one department");
   }, []);
 
   const requestOptions = {

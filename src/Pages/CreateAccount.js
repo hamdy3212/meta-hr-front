@@ -15,7 +15,7 @@ import InputLabel from "@mui/material/InputLabel";
 import { apiURL } from "../envvars";
 import ErrorsDisplayer from "../Components/ErrorsDisplayer";
 import { Router } from "@material-ui/icons";
-import { swalShow, swalToast } from '../Utility/swal';
+import { swalShow, swalShowErrors, swalToast } from '../Utility/swal';
 
 const theme = createTheme();
 
@@ -69,12 +69,13 @@ function CreateAccount() {
       }),
     };
     const response = await fetch(`${apiURL}/api/Employees`, requestOptions);
+    const respJson = await response.json();
     if (response.status === 200) {
-      const respJson = await response.json();
       swalShow("Account Created Successfully!", "", "success");
-    } else {
-      const respJson = await response.json();
+    } else if(response.status === 400 || response.status === 404) {
       setErrors(respJson.errors);
+    } else {
+      swalShowErrors("Error", respJson.errors);
     }
   };
   return (
