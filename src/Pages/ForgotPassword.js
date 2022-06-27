@@ -11,6 +11,7 @@ import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ErrorsDisplayer from '../Components/ErrorsDisplayer'
+import { apiURL } from '../envvars';
 
 const theme = createTheme();
 
@@ -34,7 +35,7 @@ function Login() {
       headers: { "Content-Type": "application/json" },
     };
     const response = await fetch(
-      `https://localhost:7057/api/Account/ForgotPassword?email=${data.get(
+      `${apiURL}/api/Account/ForgotPassword?email=${data.get(
         "email"
       )}`,
       requestOptions

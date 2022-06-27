@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import DialogContentText from "@mui/material/DialogContentText";
 import Avatar from "@mui/material/Avatar";
+import { apiURL } from '../../envvars';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -69,7 +70,7 @@ export default function ViewApplication({ selectedApplication }) {
       },
     };
     const response = await fetch(
-      `https://localhost:7057/api/JobApplications/${selectedApplication.id}/cvURL`,
+      `${apiURL}/api/JobApplications/${selectedApplication.id}/cvURL`,
       requestOptions
     );
     console.log(response);

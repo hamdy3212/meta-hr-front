@@ -13,6 +13,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import { apiURL } from '../envvars';
 
 const theme = createTheme();
 
@@ -28,12 +29,10 @@ function Register() {
     let token = queryParams.get("token");
     data.append("userId", userId);
     data.append("resetPasswordToken", token);
-    let prodUrl = "https://api.metahr.live";
-    let devUrl = "https://localhost:7057";
 
     let xhr = new XMLHttpRequest();
     xhr.responseType = "json";
-    xhr.open("POST", `${devUrl}/api/employees/onboard`);
+    xhr.open("POST", `${apiURL}/api/employees/onboard`);
     xhr.setRequestHeader("Accept", "application/json");
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     xhr.setRequestHeader("Access-Control-Allow-Origin", "*");

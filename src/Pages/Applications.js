@@ -11,6 +11,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { apiURL } from "../envvars";
 
 const Applications = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
@@ -48,7 +49,7 @@ const Applications = () => {
     },
   }; // fetch Applications
   useEffect(async () => {
-    const url = "https://localhost:7057/api/JobApplications?pageNumber=1&pageSize=999"
+    const url = `${apiURL}/api/JobApplications?pageNumber=1&pageSize=10`
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
@@ -68,7 +69,7 @@ const Applications = () => {
       },
     };
     const response = await fetch(
-      `https://localhost:7057/api/JobApplications/${selectedApplication.id}`,
+      `${apiURL}/api/JobApplications/${applicationId}`,
       requestOptions
     );
     const index = rowData.findIndex((application) => application.id === selectedApplication.id);
