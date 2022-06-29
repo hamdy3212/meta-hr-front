@@ -12,6 +12,7 @@ import React, {
   useCallback,
 } from "react";
 import { apiURL } from "../envvars";
+import { useNavigate } from "react-router-dom";
 
 const Applications = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
@@ -19,18 +20,18 @@ const Applications = () => {
   const [URL, setURL] = useState("");
   const [applicationId, setApplicationId] = useState("");
   const [selectedApplication, setSelectedApplication] = useState("");
-  
+  let navigate = useNavigate();
+
   const [columnDefs, setColumnDefs] = useState([
     { field: "id", width: 60 },
     { field: "jobTitle" },
     { field: "stage" },
-    { field: "firstName"},
-    { field: "lastName"},
-    { field: "email"},
-    { field: "phone"},
-    
+    { field: "firstName" },
+    { field: "lastName" },
+    { field: "email" },
+    { field: "phone" },
+
     // { field: "creatorDepartmentName", headerName: "Department", width: 120 },
-   
   ]);
   // color for closed applications
   const rowClassRules = useMemo(() => {
@@ -40,7 +41,7 @@ const Applications = () => {
   }, []);
   const onSelectionChanged = useCallback(() => {
     const selectedRows = gridRef.current.api.getSelectedRows();
-    setSelectedApplication(selectedRows[0]);
+    setApplicationId(selectedRows[0].id);
   }, []);
   const requestOptions = {
     headers: {
@@ -49,7 +50,7 @@ const Applications = () => {
     },
   }; // fetch Applications
   useEffect(async () => {
-    const url = `${apiURL}/api/JobApplications?pageNumber=1&pageSize=10`
+    const url = `${apiURL}/api/JobApplications?pageNumber=1&pageSize=10`;
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
@@ -72,11 +73,13 @@ const Applications = () => {
       `${apiURL}/api/JobApplications/${applicationId}`,
       requestOptions
     );
-    const index = rowData.findIndex((application) => application.id === selectedApplication.id);
+    const index = rowData.findIndex(
+      (application) => application.id === applicationId
+    );
     const applications = rowData;
     setRowData(applications);
     gridRef.current.api.refreshCells();
-    alert("Application Deleted.")
+    alert("Application Deleted.");
   };
   return (
     <div
@@ -106,7 +109,7 @@ const Applications = () => {
           rowClassRules={rowClassRules}
           enableCellChangeFlash={true}
           paginationPageSize={10}
-          ></AgGridReact>
+        ></AgGridReact>
       </div>
       <div
         style={{
@@ -116,15 +119,20 @@ const Applications = () => {
           flexDirection: "row",
         }}
       >
-        <ViewApplication selectedApplication={selectedApplication} />
-          <Button
-            variant="contained"
-            color="error"
-            onClick={Delete}
-            disabled={!selectedApplication}
-          >
-            Delete Application
-          </Button>
+        <Button
+          variant="contained"
+          onClick={()=>navigate(`../applications/${applicationId}`, {replace:true})}
+        >
+          View Application
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={Delete}
+          disabled={!applicationId}
+        >
+          Delete Application
+        </Button>
       </div>
     </div>
   );
