@@ -30,6 +30,12 @@ const Tickets = () => {
       return "Closed";
     }
   };
+  const awaitingResponseFormatter = (params) => {
+    if(params.value){
+      return "Yes";
+    }
+    return "No";
+  }
   const [columnDefs, setColumnDefs] = useState([
     { field: "id", width: 60 },
     { field: "creatorName" },
@@ -42,13 +48,13 @@ const Tickets = () => {
       width: 100,
       valueFormatter: statusFormatter,
     },
-    { field: "isAwaitingResponse", headerName: "Awaiting Response?" },
+    { field: "isAwaitingResponse", headerName: "Awaiting Response?", valueFormatter: awaitingResponseFormatter  },
     { field: "createdAt"}
   ]);
   // color for closed tickets
   const rowClassRules = useMemo(() => {
     return {
-      closedTicket: "data.isOpen === false",
+      awaitingResponseTicket: "data.isAwaitingResponse === true"
     };
   }, []);
   const onSelectionChanged = useCallback(() => {
