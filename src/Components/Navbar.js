@@ -141,9 +141,9 @@ const ResponsiveAppBar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
+              {pages.map((page,index) => (
                 <MenuItem
-                  key={page.name}
+                  key={index}
                   onClick={() => handleCloseNavMenu(page.url)}
                 >
                   <Typography textAlign="center">{page.label}</Typography>
@@ -160,9 +160,9 @@ const ResponsiveAppBar = () => {
             Meta-HR
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {pages.map((page,index) => (
               <Button
-                key={page.name}
+                key={index}
                 onClick={() => handleCloseNavMenu(page.url)}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
@@ -197,9 +197,9 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              {settings.map((setting,index) => (
                 <MenuItem
-                  key={setting.name}
+                  key={index}
                   onClick={() => handleCloseUserMenu(setting.url)}
                 >
                   <Typography textAlign="center">{setting.label}</Typography>

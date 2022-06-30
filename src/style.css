@@ -135,8 +135,8 @@ body,
 .social-icons i {
   color: #fff;
   position: absolute;
-  top: 0.95em;
-  left: 0.96em;
+  top: 0.48em;
+  left: 0.48em;
   transition: all 265ms ease-out;
 }
 
@@ -188,4 +188,7 @@ body,
 }
 .MuiTableCell-head {
   font-weight: bold !important;
+}
+#applicationInfo > * {
+  margin-bottom: 20px;
 }

@@ -10,6 +10,7 @@ import JobPost from "./Components/JobPost.js";
 import Navbar from "./Components/Navbar.js";
 import Employees from "./Pages/Employees.js";
 import ProtectedRoutes from "./ProtectedRoutes";
+import ViewApplication from "./Components/Applications/ViewApplication.js"
 import "./style.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
@@ -32,6 +33,7 @@ function App() {
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/applications" element={<Applications />} />
             <Route path="/testtickets" element={<TestTickets />} />
+            <Route path="/applications/:applicationID" element={<ViewApplication />} />
           </Route>
 
         <Route path="/onboard" element={<Onboard />} />
