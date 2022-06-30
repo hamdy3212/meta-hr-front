@@ -122,6 +122,7 @@ const Applications = () => {
         <Button
           variant="contained"
           onClick={()=>navigate(`../applications/${applicationId}`, {replace:true})}
+          disabled={!applicationId}
         >
           View Application
         </Button>

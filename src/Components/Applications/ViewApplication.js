@@ -13,6 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useParams } from "react-router-dom";
+import { swalToast } from '../../Utility/swal'
 
 export default function ViewApplication() {
   let { applicationID } = useParams();
@@ -29,6 +30,25 @@ export default function ViewApplication() {
       .then((response) => response.json())
       .then((data) => {
         setSelectedApplication(data);
+        switch (data.stage) {
+          case "Unread":
+            setStatus(0);
+            break;
+          case "PendingInterview":
+            setStatus(1);
+            break;
+          case "PendingTechnicalInterview":
+            setStatus(2);
+          case "PendingDecision":
+            setStatus(3);
+            break;
+          case "Accepted":
+            setStatus(4);
+            break;
+          case "Rejected":
+            setStatus(5);
+            break;
+        }
       });
   }, []);
   const [CV, setCV] = useState("");
@@ -52,48 +72,95 @@ export default function ViewApplication() {
       alert("something is wrong!");
     }
   };
-  const [age, setAge] = useState("");
+  const [status, setStatus] = useState("");
   const [dis, setDis] = useState(true);
 
-  const handleChange = (event) => {
-    setAge(event.target.value);
+  const handleStatus = async (event) => {
+    if(event.target.innerText === "DONE" && status !== selectedApplication.stage){
+      // Update Status
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      };
+      const response = await fetch(
+        `${apiURL}/api/JobApplications/changeStage/${applicationID}?stage=${status}`,
+        requestOptions
+      );
+      if (response.status === 200) {
+        swalToast("Status Updated Successfully.", "success");
+      } else {
+        const respJson = await response.json();
+        swalToast(respJson.errors.join(" "), "error");
+      }
+
+
+      
+    }
+    setDis(!dis);
   };
   if (!selectedApplication) {
-    return <h1> Loading... </h1>;
+    return (
+      <div
+        style={{ textAlign: "center", fontSize: "50px", marginTop: "100px" }}
+      >
+        <i className="fa-solid fa-sync fa-spin"></i>
+      </div>
+    );
   }
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <div id="title">
-        <pre style={{fontSize:"24px"}}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "50px",
+        fontSize: "24px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          border: "1px solid black",
+          borderRadius: "20px",
+          padding: "50px",
+          boxShadow: "5px 5px 20px",
+        }}
+        id="applicationInfo"
+      >
+        <pre style={{ fontSize: "28px" }}>
           {selectedApplication.firstName} {selectedApplication.lastName}'s
           Application
         </pre>
-      </div>
-      <div
-        className="content"
-        dividers
-        style={{ display: "flex", flexDirection: "column" }}
-      >
-        <span>id: {selectedApplication.id}</span>
+        <span>ID {selectedApplication.id}</span>
         {selectedApplication.jobPostingId && (
           <span>jobPostingId: {selectedApplication.jobPostingId}</span>
         )}
         {selectedApplication.jobTitle && (
           <span>JobTitle: {selectedApplication.jobTitle}</span>
         )}
-        <span>
-          {/* Received: {selectedApplication.receivedOnUtc.split("T")[0]} */}
-        </span>
-        <div>
-          <FormControl sx={{ minWidth: 250 }} disabled={dis}>
-            <InputLabel id="demo-simple-select-label">{selectedApplication.stage}</InputLabel>
+
+        <div style={{ display: "flex", alignItems: "center" }}>
+          Status
+          <FormControl
+            style={{ margin: "0 10px" }}
+            sx={{ minWidth: 250 }}
+            disabled={dis}
+          >
+            <InputLabel id="demo-simple-select-label">
+              Status
+            </InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              value={age}
-              defaultValue={selectedApplication.stage}
-              label="Age"
-              onChange={handleChange}
+              value={status}
+              defaultValue={status}
+              label="Status"
+              onChange={(e) => setStatus(e.target.value)}
             >
               //unread
               <MenuItem value={0}>Unread</MenuItem>
@@ -106,53 +173,67 @@ export default function ViewApplication() {
               <MenuItem value={5}>Rejected</MenuItem>
             </Select>
           </FormControl>
-          <Button onClick={() => setDis(!dis)}>
+          <Button
+            variant="contained"
+            style={{ width: "20px" }}
+            onClick={(event) => handleStatus(event)}
+          >
             {dis === true ? "edit" : "done"}
           </Button>
         </div>
-        <span>Email: {selectedApplication.email}</span>
-        <span>Phone: {selectedApplication.phone}</span>
-        <ul class="social-icons">
+        <span>
+          <i className="fa-solid fa-envelope"></i> {selectedApplication.email}
+        </span>
+        <span>
+          {" "}
+          <i className="fa-solid fa-phone"></i> {selectedApplication.phone}
+        </span>
+        <span>
+          Received at {selectedApplication.receivedOnUtc.split("T")[0]}
+        </span>
+        <ul
+          className="social-icons"
+          style={{
+            textAlign: "center",
+          }}
+        >
           {selectedApplication.gitHubURL ? (
             <li>
               <a href={selectedApplication.gitHubURL}>
-                <i class="fa fa-github"></i>
+                <i className="fa-brands fa-github"></i>
               </a>
             </li>
           ) : null}
           {selectedApplication.linkedInURL ? (
             <li>
               <a href={selectedApplication.linkedInURL}>
-                <i class="fa fa-linkedin"></i>
+                <i className="fa-brands fa-linkedin-in"></i>
               </a>
             </li>
           ) : null}
           {selectedApplication.personalWebsite ? (
             <li>
               <a href={selectedApplication.personalWebsite}>
-                <i class="fa fa-globe"></i>
-              </a>
-            </li>
-          ) : null}
-           {selectedApplication.personalWebsite ? (
-            <li>
-              <a href={selectedApplication.personalWebsite}>
-                <i class="fa fa-file-user"></i>
+                <i className="fa fa-globe"></i>
               </a>
             </li>
           ) : null}
           <li>
             {CV && (
               <a href={CV} target="_blank">
-                <i class="fa-solid fa-file-user"></i>
+                <i className="fa fa-file"></i>
               </a>
             )}
           </li>
         </ul>
+        <Button
+          variant="contained"
+          color="success"
+          onClick={GetCV}
+        >
+          Get CV
+        </Button>
       </div>
-      <Button varinat="contained" color="success" onClick={GetCV}>
-        Get CV
-      </Button>
     </div>
   );
 }

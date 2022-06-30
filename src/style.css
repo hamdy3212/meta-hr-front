@@ -135,8 +135,8 @@ body,
 .social-icons i {
   color: #fff;
   position: absolute;
-  top: 0.95em;
-  left: 0.96em;
+  top: 0.48em;
+  left: 0.48em;
   transition: all 265ms ease-out;
 }
 
@@ -185,4 +185,7 @@ body,
 }
 .receiver {
   background-color: #ffffff
+}
+#applicationInfo > * {
+  margin-bottom: 20px;
 }
