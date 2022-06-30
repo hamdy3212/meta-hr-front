@@ -177,12 +177,15 @@ body,
   display: grid;
   font-size: 1.2em;
 }
-.closedTicket{
-  background-color: lightgreen !important;
-}
 .sender {
   background-color: rgb(184, 219, 248);
 }
 .receiver {
   background-color: #ffffff
+}
+.awaitingResponseTicket td {
+  font-weight: bold !important;
+}
+.MuiTableCell-head {
+  font-weight: bold !important;
 }

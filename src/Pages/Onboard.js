@@ -39,12 +39,12 @@ function Register() {
     xhr.onload = () => {
         let data = xhr.response;
         console.log(data);
-        if (data.isSuccessful == false) {
+        if (data.isSuccessful === false) {
           console.log(data.errors);
         }
       };
       xhr.onreadystatechange = function () {
-        if (xhr.status != 200) {
+        if (xhr.status !== 200) {
           console.log("response code not 200!");
           console.log(xhr.status);
         }
