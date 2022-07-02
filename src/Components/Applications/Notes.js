@@ -14,7 +14,6 @@ const Notes = ({ applicationID }) => {
   const [notes, setNotes] = useState([]);
   const [noteContent, setNoteContent] = useState("");
   const [editNote, setEditNote] = useState("");
-  const [editNoteContent, setEditNoteContent] = useState("");
   const [errors, setErrors] = useState([]);
   const fetchNotes = async () => {
     const url = `${apiURL}/api/jobApplications/${applicationID}/notes`;
@@ -62,13 +61,9 @@ const Notes = ({ applicationID }) => {
   };
   const handleEdit = (ID, content) => {
     setEditNote(ID);
-    setEditNoteContent(content);
+    setNoteContent(content)
   };
-  const handleUpdateNote = async (ID, content) => {
-    setEditNote("");
-    if (content === editNoteContent) {
-      return;
-    }
+  const handleUpdateNote = async (e) => {
     const requestOptions = {
       method: "POST",
       headers: {
@@ -76,8 +71,8 @@ const Notes = ({ applicationID }) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify({
-        noteId: ID,
-        content: editNoteContent,
+        noteId: editNote,
+        content: noteContent,
       }),
     };
     const response = await fetch(
@@ -87,11 +82,15 @@ const Notes = ({ applicationID }) => {
     const respJson = await response.json();
     if (response.status === 200) {
       swalShow("Note Updated Successfully!", "", "success");
+      setEditNote("");
+      setNoteContent("");
+      fetchNotes();
     } else if (response.status === 400 || response.status === 404) {
       setErrors(respJson.errors);
     } else {
       swalShowErrors("Error", respJson.errors);
     }
+
   };
   const handleDelete = async (ID) => {
     const confirmed = await swalConfirm(
@@ -134,42 +133,36 @@ const Notes = ({ applicationID }) => {
           className="note-text-area"
           rows="9"
           cols="70"
+          value={noteContent}
           onChange={(e) => {
             setNoteContent(e.target.value);
           }}
         ></textarea>
-        <Button variant="contained" onClick={(e) => handleAddNote(e)}>
-          Add Note
-        </Button>
+        {!editNote ? (
+          <Button variant="contained" onClick={(e) => handleAddNote(e)}>
+            Add Note
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            onClick={(e) => handleUpdateNote(e)}
+          >
+            Update Note
+          </Button>
+        )}
       </div>
       <div style={{ transition: "0.5s" }}>
         {notes.map((note, index) => {
-          console.log(note.content);
           return (
             <div key={index} className="note">
-              <input
-                type="text"
-                className="note-content"
-                name={note.id}
-                defaultValue={note.content}
-                onChange={(e) => {
-                  setEditNoteContent(e.target.value);
-                }}
-                disabled={editNote !== note.id}
-              />
+              <p type="text" className="note-content">
+                {note.content}
+              </p>
               <div>
-                {editNote !== note.id ? (
-                  <i
-                    class="fa-solid fa-pencil"
-                    onClick={() => handleEdit(note.id, note.content)}
-                  ></i>
-                ) : (
-                  <i
-                    class="fa-solid fa-check"
-                    onClick={() => handleUpdateNote(note.id, note.content)}
-                  ></i>
-                )}
-
+                <i
+                  class="fa-solid fa-pencil"
+                  onClick={() => handleEdit(note.id, note.content)}
+                ></i>
                 <i
                   class="fa-solid fa-trash-can"
                   onClick={() => handleDelete(note.id)}
