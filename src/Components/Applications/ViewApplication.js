@@ -13,8 +13,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useParams } from "react-router-dom";
-import { swalToast } from '../../Utility/swal'
-
+import { swalToast } from "../../Utility/swal";
+import Notes from "./Notes.js";
 export default function ViewApplication() {
   let { applicationID } = useParams();
   const [selectedApplication, setSelectedApplication] = useState("");
@@ -76,7 +76,10 @@ export default function ViewApplication() {
   const [dis, setDis] = useState(true);
 
   const handleStatus = async (event) => {
-    if(event.target.innerText === "DONE" && status !== selectedApplication.stage){
+    if (
+      event.target.innerText === "DONE" &&
+      status !== selectedApplication.stage
+    ) {
       // Update Status
       const requestOptions = {
         method: "POST",
@@ -95,9 +98,6 @@ export default function ViewApplication() {
         const respJson = await response.json();
         swalToast(respJson.errors.join(" "), "error");
       }
-
-
-      
     }
     setDis(!dis);
   };
@@ -114,10 +114,10 @@ export default function ViewApplication() {
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        flexDirection: "row",
         marginTop: "50px",
         fontSize: "24px",
+        justifyContent: "space-around",
       }}
     >
       <div
@@ -129,6 +129,7 @@ export default function ViewApplication() {
           borderRadius: "20px",
           padding: "50px",
           boxShadow: "5px 5px 20px",
+          maxHeight: "600px"
         }}
         id="applicationInfo"
       >
@@ -151,9 +152,7 @@ export default function ViewApplication() {
             sx={{ minWidth: 250 }}
             disabled={dis}
           >
-            <InputLabel id="demo-simple-select-label">
-              Status
-            </InputLabel>
+            <InputLabel id="demo-simple-select-label">Status</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
@@ -162,13 +161,10 @@ export default function ViewApplication() {
               label="Status"
               onChange={(e) => setStatus(e.target.value)}
             >
-              //unread
               <MenuItem value={0}>Unread</MenuItem>
-              //inProgress
               <MenuItem value={1}>PendingInterview</MenuItem>
               <MenuItem value={2}>PendingTechnicalInterview</MenuItem>
               <MenuItem value={3}>PendingDecision</MenuItem>
-              //completed
               <MenuItem value={4}>Accepted</MenuItem>
               <MenuItem value={5}>Rejected</MenuItem>
             </Select>
@@ -226,14 +222,11 @@ export default function ViewApplication() {
             )}
           </li>
         </ul>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={GetCV}
-        >
+        <Button variant="contained" color="success" onClick={GetCV}>
           Get CV
         </Button>
       </div>
+      <Notes applicationID={applicationID} />
     </div>
   );
 }
