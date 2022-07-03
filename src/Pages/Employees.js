@@ -42,23 +42,24 @@ const PeopleList = () => {
                 {employee.departmentName}
               </div>
             </div>
-            <ul class="social-icons">
-              {employee.gitHubURL ? <li>
+            <ul class="social-icons"  style={{fontSize:"24px"}}>
+              {employee.gitHubURL && <li>
                 <a href={employee.gitHubURL}>
                   <i class="fa fa-github"></i>
                 </a>
-              </li> : null}
-              {employee.linkedInURL ? <li>
+              </li>}
+              {employee.linkedInURL && <li>
                 <a href={employee.linkedInURL}>
                   <i class="fa fa-linkedin"></i>
                 </a>
-              </li> : null}
-              {employee.personalWebsite ? <li>
+              </li>}
+              {employee.personalWebsite && <li>
                 <a href={employee.personalWebsite}>
                   <i class="fa fa-globe"></i>
                 </a>
-              </li> : null}
+              </li>}
             </ul>
+            <button class="btn draw-border">Attendance Log</button>
           </div>
         );
       })}

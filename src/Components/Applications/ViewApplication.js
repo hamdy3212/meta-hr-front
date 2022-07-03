@@ -129,7 +129,7 @@ export default function ViewApplication() {
           borderRadius: "20px",
           padding: "50px",
           boxShadow: "5px 5px 20px",
-          maxHeight: "600px"
+          maxHeight: "600px",
         }}
         id="applicationInfo"
       >
@@ -193,27 +193,27 @@ export default function ViewApplication() {
             textAlign: "center",
           }}
         >
-          {selectedApplication.gitHubURL ? (
+          {selectedApplication.gitHubURL && (
             <li>
               <a href={selectedApplication.gitHubURL}>
                 <i className="fa-brands fa-github"></i>
               </a>
             </li>
-          ) : null}
-          {selectedApplication.linkedInURL ? (
+          )}
+          {selectedApplication.linkedInURL && (
             <li>
               <a href={selectedApplication.linkedInURL}>
                 <i className="fa-brands fa-linkedin-in"></i>
               </a>
             </li>
-          ) : null}
-          {selectedApplication.personalWebsite ? (
+          )}
+          {selectedApplication.personalWebsite && (
             <li>
               <a href={selectedApplication.personalWebsite}>
                 <i className="fa fa-globe"></i>
               </a>
             </li>
-          ) : null}
+          )}
           <li>
             {CV && (
               <a href={CV} target="_blank">
