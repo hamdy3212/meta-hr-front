@@ -5,6 +5,7 @@ import CreateAccount from "./Pages/CreateAccount.js";
 import Onboard from "./Pages/Onboard.js";
 import Applications from "./Pages/Applications.js";
 import Home from "./Pages/Home.js";
+import Attendance from "./Pages/Attendance.js";
 import Jobs from "./Components/Jobs.js";
 import JobPost from "./Components/JobPost.js";
 import Navbar from "./Components/Navbar.js";
@@ -37,6 +38,7 @@ function App() {
             <Route path="/testtickets" element={<TestTickets />} />
             <Route path="/applications/:applicationID" element={<ViewApplication />} />
             <Route path="/jobs/:jobID" element={<Job />} />
+            <Route path="/Attendances/getByEmployeeId/:employeeID" element={<Attendance />} />
           </Route>
 
         <Route path="/onboard" element={<Onboard />} />

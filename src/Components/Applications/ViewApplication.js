@@ -15,6 +15,8 @@ import Select from "@mui/material/Select";
 import { useParams } from "react-router-dom";
 import { swalToast } from "../../Utility/swal";
 import Notes from "./Notes.js";
+import Grid from "@mui/material/Grid";
+
 export default function ViewApplication() {
   let { applicationID } = useParams();
   const [selectedApplication, setSelectedApplication] = useState("");
@@ -111,7 +113,8 @@ export default function ViewApplication() {
     );
   }
   return (
-    <div
+    <Grid
+      container
       style={{
         display: "flex",
         flexDirection: "row",
@@ -120,7 +123,13 @@ export default function ViewApplication() {
         justifyContent: "space-around",
       }}
     >
-      <div
+      <Grid
+        item
+        xs={12}
+        md={6}
+        style={{padding:"0 20px"}}
+      >
+        <div
         style={{
           display: "flex",
           flexDirection: "column",
@@ -132,20 +141,30 @@ export default function ViewApplication() {
           maxHeight: "600px",
         }}
         id="applicationInfo"
-      >
+>
         <pre style={{ fontSize: "28px" }}>
           {selectedApplication.firstName} {selectedApplication.lastName}'s
           Application
         </pre>
-        <span><span className="text-muted">Application ID:</span> {selectedApplication.id}</span>
+        <span>
+          <span className="text-muted">Application ID:</span>{" "}
+          {selectedApplication.id}
+        </span>
         {selectedApplication.jobPostingId && (
-          <span><span className="text-muted">Job ID:</span> {selectedApplication.jobPostingId}</span>
+          <span>
+            <span className="text-muted">Job ID:</span>{" "}
+            {selectedApplication.jobPostingId}
+          </span>
         )}
         {selectedApplication.jobTitle && (
-          <span><span className="text-muted">Job Title:</span> {selectedApplication.jobTitle}</span>
+          <span>
+            <span className="text-muted">Job Title:</span>{" "}
+            {selectedApplication.jobTitle}
+          </span>
         )}
         <span>
-        <span className="text-muted">Received On:</span> {selectedApplication.receivedOnUtc.split("T")[0]}
+          <span className="text-muted">Received On:</span>{" "}
+          {selectedApplication.receivedOnUtc.split("T")[0]}
         </span>
         <div style={{ display: "flex", alignItems: "center" }}>
           Status
@@ -222,10 +241,11 @@ export default function ViewApplication() {
           </li>
         </ul>
         <Button variant="contained" color="success" onClick={GetCV}>
-          Get CV
+          Get CV <i style={{marginLeft:"10px"}}className="fa fa-file"></i>
         </Button>
-      </div>
+        </div>
+      </Grid>
       <Notes applicationID={applicationID} />
-    </div>
+    </Grid>
   );
 }
