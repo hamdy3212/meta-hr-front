@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import AddAlertIcon from '@mui/icons-material/AddAlert';
 import { apiURL } from "../envvars";
+import { swalToast, swalShowErrors } from '../Utility/swal';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -51,7 +52,7 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function CustomizedDialogs() {
+export default function CustomizedDialogs( { onCreated } ) {
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -89,12 +90,12 @@ export default function CustomizedDialogs() {
       requestOptions
     );
     if (response.status === 200) {
-      const data2 = await response.json();
-      console.log(data2);
-      alert("Announcement was addedd successfully");
+      swalToast("Announcement added successfully", "success");
+      onCreated();
       setOpen(false);
     } else {
-      alert("something is wrong!");
+      let respJson = await response.json();
+      swalShowErrors("Something went wrong!", respJson.errors);
     }
   };
   return (

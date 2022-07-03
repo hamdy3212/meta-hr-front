@@ -12,45 +12,41 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router";
+import { userIsInRole, roles } from '../Utility/roles';
 
 const ResponsiveAppBar = () => {
   let navigate = useNavigate();
   const [pages, setPages] = React.useState([]);
   const [settings, setSettings] = React.useState([]);
   React.useEffect(() => {
+
     if (localStorage.getItem("token")) {
-      setPages([
+      let tempPages = [
         { label: "Home", url: "Home" },
         { label: "Employees", url: "Employees" },
         { label: "Departments", url: "departments" },
-        { label: "Jobs", url: "Jobs" },
-        { label: "Tickets", url: "Tickets" },
         { label: "Applications", url: "applications" },
-
-
-      ]);
+      ]
+      if(userIsInRole(roles.admin) === false){
+        tempPages.push({ label: "Tickets", url: "Tickets" });
+      }
+      if(userIsInRole(roles.admin) || userIsInRole(roles.hrJunior) || userIsInRole(roles.hrSenior)){
+        tempPages.push({ label: "Job Postings", url: "Jobs"});
+      }
       if (localStorage.getItem("role") === "Admin") {
         setSettings([
           { label: "Create New Employee Account", url: "CreateAccount" },
-          { label: "Jobs", url: "Jobs" },
-          { label: "Add Job", url: "addJob" },
         ]);
       } else if (localStorage.getItem("role") === "Employee") {
         setSettings([{ label: "Tickets", url: "Tickets" }]);
       } else {
         setSettings([
-          { label: "Add Job", url: "addJob" },
+          { label: "Add Job Posting", url: "addJob" },
           { label: "Create New Employee Account", url: "CreateAccount" },
         ]);
       }
-    } /*else {
-      setPages([
-        { label: "Login", url: "login" },
-      ]);
-      setSettings([
-        { label: "Login", url: "login" },
-      ]);
-    }*/
+      setPages(tempPages);
+    }
   }, [localStorage.getItem("token")]);
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -88,8 +84,11 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
     localStorage.removeItem("token");
     localStorage.removeItem("role");
+    localStorage.removeItem("roles");
     localStorage.removeItem("userId");
     localStorage.removeItem("userPfpUrl");
+    setPages([]);
+    setSettings([]);
     navigate("login");
   };
 

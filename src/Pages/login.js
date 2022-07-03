@@ -46,6 +46,7 @@ function Login() {
       console.log(data2)
       localStorage.setItem("token", data2.localUserInfo.token);
       localStorage.setItem("role", data2.localUserInfo.roles[0]);
+      localStorage.setItem("roles", data2.localUserInfo.roles);
       localStorage.setItem("userId", data2.localUserInfo.id);
       localStorage.setItem("userPfpUrl", data2.localUserInfo.profilePictureURL);
       navigate("/");

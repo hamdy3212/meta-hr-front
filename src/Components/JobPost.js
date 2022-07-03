@@ -9,6 +9,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { apiURL } from "../envvars";
 import * as ReactQuill from 'react-quill'; // Typescript
 import 'react-quill/dist/quill.snow.css'; // ES6
+import { swalShow, swalToast } from "../Utility/swal";
 
 const theme = createTheme();
 
@@ -36,18 +37,17 @@ function JobPost() {
       `${apiURL}/api/JobPostings`,
       requestOptions
     );
+    const data2 = await response.json();
     if (response.status === 200) {
-      const data2 = await response.json();
-      console.log(data2);
-      alert("Job was addedd successfully")
+      swalShow("Job posting added successfully!", "success");
       navigate("/jobs");
     } else {
-      alert("something is wrong!");
+      swalShow(data2.errors.join(" "), "error");
     }
   };
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" style={{ marginTop: "150px" }}>
+      <Container component="main" maxWidth="xs" style={{ marginTop: "15px" }}>
         <Box
           sx={{
             marginTop: 8,
@@ -57,7 +57,7 @@ function JobPost() {
           }}
         >
           <Typography component="h1" variant="h5">
-            Add Job
+            Add Job Posting
           </Typography>
           <Box
             component="form"

@@ -11,6 +11,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { apiURL } from "../../envvars";
+import { swalShowErrors, swalToast } from "../../Utility/swal";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -50,7 +51,7 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function CustomizedDialogs() {
+export default function CustomizedDialogs( {onCreated} ) {
   const [open, setOpen] = React.useState(false);
   const [subject, setSubject ] = useState("");
   const [message, setMessage ] = useState("");
@@ -81,12 +82,12 @@ export default function CustomizedDialogs() {
       requestOptions
     );
     if (response.status === 200) {
-      const data2 = await response.json();
-      console.log(data2);
-      alert("Ticket sent successfully");
+      swalToast("Ticket created successfully!", "success");
+      onCreated();
       setOpen(false);
     } else {
-      alert("something is wrong!");
+      const respJson = await response.json();
+      swalShowErrors("Something went wrong", respJson.errors);
     }
   };
   return (

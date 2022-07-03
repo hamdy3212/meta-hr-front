@@ -8,17 +8,51 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import { apiURL } from "../envvars";
+import { Button } from "@mui/material";
+import { swalToast, swalConfirm, swalShowErrors } from "../Utility/swal";
+import { useNavigate } from "react-router-dom";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectCategories, setselectCategories] = useState([]);
-
+  const navigate = useNavigate();
+  const htmlRegex = /(<([^>]+)>)/gi;
   const handleChange = (event) => {
     if (Array.isArray(event.target.value)) {
       setCategories(event.target.value);
     } else {
       setCategories([event.target.value]);
+    }
+  };
+  const handleViewJob = (jid) => {
+    navigate("/jobs/" + jid);
+  }
+  const handleDelete = async (jpId) => {
+    const confirmed = await swalConfirm(
+      "Are you sure you want to delete this job posting?",
+      "This action cannot be undone!",
+      "warning"
+    );
+    if (!confirmed) {
+      return;
+    }
+    const requestOptions = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    };
+    const resp = await fetch(
+      `${apiURL}/api/JobPostings/${jpId}`,
+      requestOptions
+    );
+    const respJson = await resp.json();
+    if (respJson.isSuccessful) {
+      swalToast("Job Posting deleted successfully!", "success");
+    } else {
+      swalShowErrors("Something went wrong!", respJson.errors);
     }
   };
 
@@ -45,12 +79,12 @@ const Jobs = () => {
 
   return (
     <Container>
-      <h1>Open Positions </h1>
+      <h1 style={{ marginTop: "8px", textAlign: "center" }}>Open Positions </h1>
       <div
         style={{
           marginTop: 10,
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "end",
           alignItems: "center",
         }}
       >
@@ -97,16 +131,30 @@ const Jobs = () => {
                         marginRight: "30px",
                       }}
                       key={index}
-                      onClick={() => console.log("Job details")}
-                      style={{ backgroundColor: "#d6e8ff", cursor: "pointer" }}
+                      style={{
+                        backgroundColor: "#d6e8ff",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleViewJob(job.id)}
                     >
                       <CardContent>
                         <Typography gutterBottom variant="h5" component="div">
-                          {job.title}
+                          {job.title} - (ID: {job.id})
                         </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {job.descriptionHtml}
+                        <Typography gutterBottom variant="h5" component="div">
+                          {job.descriptionHtml
+                            .replace(htmlRegex, " ")
+                            .replace(/\s+/g, " ")
+                            .substring(0, 100) + "..."}
                         </Typography>
+                        <Button
+                          variant="contained"
+                          onClick={() => handleDelete(job.id)}
+                          disabled={console.log("first")}
+                          color="error"
+                        >
+                          Delete
+                        </Button>
                       </CardContent>
                     </Card>
                   );

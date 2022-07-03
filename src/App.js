@@ -17,6 +17,8 @@ import React from "react";
 import { Departments } from "./Pages/Departments";
 import Tickets from "./Pages/Tickets";
 import TestTickets from "./Pages/TestTickets.js";
+import Job from "./Components/Job.js";
+import Test from "./Components/Test.js";
 
 function App() {
   return (
@@ -34,9 +36,11 @@ function App() {
             <Route path="/applications" element={<Applications />} />
             <Route path="/testtickets" element={<TestTickets />} />
             <Route path="/applications/:applicationID" element={<ViewApplication />} />
+            <Route path="/jobs/:jobID" element={<Job />} />
           </Route>
 
         <Route path="/onboard" element={<Onboard />} />
+        <Route path="/test" element={<Test />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgotpassword" element={<ForgotPassord />} />
         <Route path="/account/resetPassword" element={<ResetPw />} />

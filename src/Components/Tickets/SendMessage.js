@@ -12,10 +12,12 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { apiURL } from "../../envvars";
+import { swalShow, swalToast } from "../../Utility/swal";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
-export default function SendMessage({ ticketId }) {
-  const [subject, setSubject] = useState("");
+export default function SendMessage({ ticketId, onSent }) {
   const [content, setContent] = useState("");
+  const [isNote, setIsNote] = useState(false);
 
   const handleSubmit = async (event) => {
     if (content.length < 1) {
@@ -32,14 +34,18 @@ export default function SendMessage({ ticketId }) {
       },
     };
     const response = await fetch(
-      `${apiURL}/api/Tickets/createMessage?ticketId=${ticketId}&content=${content}&isInternalNote=false`,
+      `${apiURL}/api/Tickets/createMessage?ticketId=${ticketId}&content=${content}&isInternalNote=${isNote}`,
       requestOptions
     );
     if (response.status === 200) {
-      const data2 = await response.json();
-      alert("Message sent successfully");
+      swalToast("Message sent successfully", "success");
+      setIsNote(false);
+      setContent("");
+      onSent();
     } else {
-      alert("something is wrong!");
+      const respJson = await response.json();
+      console.log(respJson)
+      swalToast("Something went wrong!", "error");
     }
   };
   return (
@@ -55,6 +61,7 @@ export default function SendMessage({ ticketId }) {
           id="message"
           label="Message"
           onChange={(e) => setContent(e.target.value)}
+          value={content}
           fullWidth
           rows={4}
         />
@@ -72,6 +79,21 @@ export default function SendMessage({ ticketId }) {
           Send
         </Button>
       </Grid>
+      {
+        localStorage.getItem("role") === "HR_Senior" || localStorage.getItem("role") === "HR_Junior" ?
+        <Grid item xs={6}>
+          <FormControlLabel 
+            label="Is Internal Note?"
+            control={<Checkbox 
+              id="isNote"
+              label="isNote"
+              onChange={(e) => setIsNote(e.target.checked)}
+            />}
+          />
+        </Grid>
+        :
+        null
+      }
     </Grid>
   );
 }
