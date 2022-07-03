@@ -137,14 +137,16 @@ export default function ViewApplication() {
           {selectedApplication.firstName} {selectedApplication.lastName}'s
           Application
         </pre>
-        <span>ID {selectedApplication.id}</span>
+        <span><span className="text-muted">Application ID:</span> {selectedApplication.id}</span>
         {selectedApplication.jobPostingId && (
-          <span>jobPostingId: {selectedApplication.jobPostingId}</span>
+          <span><span className="text-muted">Job ID:</span> {selectedApplication.jobPostingId}</span>
         )}
         {selectedApplication.jobTitle && (
-          <span>JobTitle: {selectedApplication.jobTitle}</span>
+          <span><span className="text-muted">Job Title:</span> {selectedApplication.jobTitle}</span>
         )}
-
+        <span>
+        <span className="text-muted">Received On:</span> {selectedApplication.receivedOnUtc.split("T")[0]}
+        </span>
         <div style={{ display: "flex", alignItems: "center" }}>
           Status
           <FormControl
@@ -162,9 +164,9 @@ export default function ViewApplication() {
               onChange={(e) => setStatus(e.target.value)}
             >
               <MenuItem value={0}>Unread</MenuItem>
-              <MenuItem value={1}>PendingInterview</MenuItem>
-              <MenuItem value={2}>PendingTechnicalInterview</MenuItem>
-              <MenuItem value={3}>PendingDecision</MenuItem>
+              <MenuItem value={1}>Pending Interview</MenuItem>
+              <MenuItem value={2}>Pending Technical Interview</MenuItem>
+              <MenuItem value={3}>Pending Decision</MenuItem>
               <MenuItem value={4}>Accepted</MenuItem>
               <MenuItem value={5}>Rejected</MenuItem>
             </Select>
@@ -183,9 +185,6 @@ export default function ViewApplication() {
         <span>
           {" "}
           <i className="fa-solid fa-phone"></i> {selectedApplication.phone}
-        </span>
-        <span>
-          Received at {selectedApplication.receivedOnUtc.split("T")[0]}
         </span>
         <ul
           className="social-icons"

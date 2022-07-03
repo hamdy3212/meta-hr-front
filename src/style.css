@@ -197,3 +197,7 @@ body,
 .internal-note {
   background-color: wheat;
 }
+
+.text-muted {
+  color: #6c757d !important;
+}
