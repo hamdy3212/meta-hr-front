@@ -1,0 +1,57 @@
+.fa-solid.fa-trash-can {
+  color: red;
+  margin-left: 10px;
+}
+
+.fa-solid.fa-trash-can:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 10px #4caeff;
+}
+.fa-solid.fa-trash-can:active {
+  transform: scale(1.1);
+}
+
+.fa-solid.fa-pencil {
+  color: green;
+}
+.fa-solid.fa-pencil:hover {
+  cursor: pointer;
+}
+.fa-solid.fa-pencil:active {
+  transform: scale(1.1);
+}
+.fa-solid.fa-check{
+  color: green;
+}
+.fa-solid.fa-check:hover {
+  cursor: pointer;
+}
+.fa-solid.fa-check:active {
+  transform: scale(1.1);
+}
+.note {
+  border: 1px solid black;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: #fbdf8c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+.note-content{
+  background-color: #fbdf8c;
+  border: none;
+  font-size:18px;
+  margin: 5px
+}
+.note-content:focus {
+  outline: none;
+}
+.note-text-area{
+  border-radius: 10px;
+  background-color:#fbdf8c
+}
+.note-text-area:focus{
+  outline: none;
+}

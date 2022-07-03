@@ -71,9 +71,27 @@ const PeopleList = () => {
                 ) : null}
               </ul>
             </div>
-          );
-        })}
-      </div>
+            <ul class="social-icons"  style={{fontSize:"24px"}}>
+              {employee.gitHubURL && <li>
+                <a href={employee.gitHubURL}>
+                  <i class="fa fa-github"></i>
+                </a>
+              </li>}
+              {employee.linkedInURL && <li>
+                <a href={employee.linkedInURL}>
+                  <i class="fa fa-linkedin"></i>
+                </a>
+              </li>}
+              {employee.personalWebsite && <li>
+                <a href={employee.personalWebsite}>
+                  <i class="fa fa-globe"></i>
+                </a>
+              </li>}
+            </ul>
+            <button class="btn draw-border">Attendance Log</button>
+          </div>
+        );
+      })}
     </div>
   );
 };
