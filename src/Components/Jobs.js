@@ -9,7 +9,12 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import { apiURL } from "../envvars";
 import { Button } from "@mui/material";
-import { swalToast, swalConfirm, swalShowErrors } from "../Utility/swal";
+import {
+  swalToast,
+  swalConfirm,
+  swalShowErrors,
+  swalShow,
+} from "../Utility/swal";
 import { useNavigate } from "react-router-dom";
 
 const Jobs = () => {
@@ -27,7 +32,7 @@ const Jobs = () => {
   };
   const handleViewJob = (jid) => {
     navigate("/jobs/" + jid);
-  }
+  };
   const handleDelete = async (jpId) => {
     const confirmed = await swalConfirm(
       "Are you sure you want to delete this job posting?",
@@ -51,12 +56,13 @@ const Jobs = () => {
     const respJson = await resp.json();
     if (respJson.isSuccessful) {
       swalToast("Job Posting deleted successfully!", "success");
+      getData();
     } else {
       swalShowErrors("Something went wrong!", respJson.errors);
     }
   };
 
-  useEffect(() => {
+  const getData = () => {
     fetch(`${apiURL}/api/JobPostings`)
       .then((response) => {
         return response.json();
@@ -73,8 +79,12 @@ const Jobs = () => {
         setJobs(result);
       })
       .catch((error) => {
-        alert("يوجد خطأ ما!");
+        swalShow("Something went wrong", "", "error");
       });
+  };
+
+  useEffect(() => {
+    getData();
   }, []);
 
   return (
@@ -133,20 +143,27 @@ const Jobs = () => {
                       key={index}
                       style={{
                         backgroundColor: "#d6e8ff",
-                        cursor: "pointer",
                       }}
-                      onClick={() => handleViewJob(job.id)}
                     >
                       <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                          {job.title} - (ID: {job.id})
-                        </Typography>
-                        <Typography gutterBottom variant="h5" component="div">
-                          {job.descriptionHtml
-                            .replace(htmlRegex, " ")
-                            .replace(/\s+/g, " ")
-                            .substring(0, 100) + "..."}
-                        </Typography>
+                        <div
+                          onClick={() => handleViewJob(job.id)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <Typography gutterBottom variant="h5" component="div">
+                            {job.title} - (ID: {job.id})
+                          </Typography>
+                          <Typography gutterBottom variant="h5" component="div">
+                            {job.descriptionHtml.length > 100
+                              ? job.descriptionHtml
+                                  .replace(htmlRegex, " ")
+                                  .replace(/\s+/g, " ")
+                                  .substring(0, 100) + "..."
+                              : job.descriptionHtml
+                                  .replace(htmlRegex, " ")
+                                  .replace(/\s+/g, " ")}
+                          </Typography>
+                        </div>
                         <Button
                           variant="contained"
                           onClick={() => handleDelete(job.id)}

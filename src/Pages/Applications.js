@@ -13,6 +13,7 @@ import React, {
 } from "react";
 import { apiURL } from "../envvars";
 import { useNavigate } from "react-router-dom";
+import { swalConfirm, swalShowErrors, swalToast } from "../Utility/swal";
 
 const Applications = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
@@ -43,14 +44,15 @@ const Applications = () => {
     const selectedRows = gridRef.current.api.getSelectedRows();
     setApplicationId(selectedRows[0].id);
   }, []);
-  const requestOptions = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  }; // fetch Applications
-  useEffect(async () => {
-    const url = `${apiURL}/api/JobApplications?pageNumber=1&pageSize=10`;
+
+  const getData = () => {
+    const requestOptions = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    };
+    const url = `${apiURL}/api/JobApplications?pageNumber=1&pageSize=1000`;
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
@@ -60,8 +62,19 @@ const Applications = () => {
           setRowData(rowData.objects);
         }
       });
+  };
+  useEffect(() => {
+    getData();
   }, []);
   const Delete = async () => {
+    const confirmed = await swalConfirm(
+      `Are you sure you want to delete job application with ID ${applicationId}?`,
+      "This action cannot be undone.",
+      "warning"
+    );
+    if (!confirmed) {
+      return;
+    }
     const requestOptions = {
       method: "DELETE",
       headers: {
@@ -73,13 +86,16 @@ const Applications = () => {
       `${apiURL}/api/JobApplications/${applicationId}`,
       requestOptions
     );
-    const index = rowData.findIndex(
-      (application) => application.id === applicationId
-    );
+    if (response.status === 200) {
+      swalToast("Application deleted successfully", "success");
+      getData();
+    } else {
+      const respJson = await response.json();
+      swalShowErrors("Something went wrong!", respJson.errors);
+    }
     const applications = rowData;
     setRowData(applications);
     gridRef.current.api.refreshCells();
-    alert("Application Deleted.");
   };
   return (
     <div
@@ -121,7 +137,9 @@ const Applications = () => {
       >
         <Button
           variant="contained"
-          onClick={()=>navigate(`../applications/${applicationId}`, {replace:true})}
+          onClick={() =>
+            navigate(`../applications/${applicationId}`, { replace: true })
+          }
           disabled={!applicationId}
         >
           View Application

@@ -129,7 +129,7 @@ export default function CustomizedDialogs({ departmentId }) {
             disablePortal
             id="combo-box-demo"
             options={employees}
-            getOptionLabel={(option) => option.firstName}
+            getOptionLabel={(option) => `${option.firstName} ${option.lastName} - (${option.email})`}
             onChange={(event, newValue) => {
               setEmployeeId(newValue.id);
             }}
