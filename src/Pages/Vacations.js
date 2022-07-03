@@ -1,0 +1,194 @@
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import "ag-grid-community/dist/styles/ag-grid.css";
+import "ag-grid-community/dist/styles/ag-theme-alpine.css";
+import { AgGridColumn, AgGridReact } from "ag-grid-react";
+import RequestVacation from "../Components/Vacations/RequestVacation";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
+import { apiURL } from "../envvars";
+import { swalShowErrors, swalToast } from "../Utility/swal";
+
+const Vacations = () => {
+  const gridRef = useRef(); // Optional - for accessing Grid's API
+  const [rowData, setRowData] = useState(); // Set rowData to Array of Objects, one Object per Row
+  const [URL, setURL] = useState("");
+  const [ticketId, setTicketId] = useState("");
+  const [ticketStatus, setTicketStatus] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState("");
+  const handleCreated = () => {
+    getData();
+  };
+  const dateFormatter = (params) => {
+    return params.value.split("T")[0];
+  };
+  const fullName = (params) => {
+    if (localStorage.getItem("role") !== "Employee") {
+      return params.data.employeeFirstName + " " + params.data.employeeLastName;
+    } else if (params.data.reviewerFirstName === null) {
+      return "";
+    }
+    return params.data.reviewerFirstName + " " + params.data.reviewerLastName;
+  };
+  const acceptVacation = async (id)=> {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        state: 1,
+        denialReason: "test",
+      }),
+    };
+    const response = await fetch(
+      `${apiURL}/api/VacationRequests/${id}`,
+      requestOptions
+    );
+    if (response.status === 200) {
+      swalToast("Vacation Denied!", "success");
+      getData();
+    } else {
+      const respJson = await response.json();
+      swalShowErrors("Something went wrong", respJson.errors);
+    }
+  }
+  const denyVacation = async (id)=> {
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        state: 2,
+        denialReason: "test",
+      }),
+    };
+    const response = await fetch(
+      `${apiURL}/api/VacationRequests/${id}`,
+      requestOptions
+    );
+    if (response.status === 200) {
+      swalToast("Vacation Accepted!", "success");
+      getData();
+    } else {
+      const respJson = await response.json();
+      swalShowErrors("Something went wrong", respJson.errors);
+    }  }
+  const stateChanger = (props) => {
+    if(props.value === "Pending"){
+      return (
+        <div>
+          <Button
+            variant="contained"
+            color="success"
+            style={{ marginRight: "5px" }}
+            onClick={()=> acceptVacation(props.data.id)}
+          >
+            Accept
+          </Button>
+          <Button variant="contained" color="error"
+            onClick={()=> denyVacation(props.data.id)}
+          >
+            Deny
+          </Button>
+        </div>
+      );
+    } else {
+      return props.value
+    }
+  
+  };
+  const columns =
+    localStorage.getItem("role") !== "Employee"
+      ? [
+          { field: "name", headerName: "Name", valueFormatter: fullName },
+          { field: "employeeEmail" },
+          { field: "departmentName" },
+          { field: "state", cellRenderer: stateChanger }
+        ]
+      : [
+          {
+            field: "ReviewerFirstName",
+            headerName: "Reviewed by",
+            valueFormatter: fullName,
+          },
+          { field: "state" },
+          { field: "denialReason" },
+        ];
+  const [columnDefs, setColumnDefs] = useState([
+    { field: "id", width: 60 },
+    ...columns,
+    { field: "from", width: 110, valueFormatter: dateFormatter },
+    { field: "to", width: 110, valueFormatter: dateFormatter },
+
+  ]);
+  const getData = async () => {
+    const requestOptions = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }; // fetch Vacations
+    const url =
+      (await localStorage.getItem("role")) === "Employee"
+        ? `${apiURL}/api/VacationRequests/byEmployee?employeeId=${localStorage.getItem(
+            "userId"
+          )}&pageNumber=1&pageSize=10`
+        : `${apiURL}/api/VacationRequests?pageNumber=1&pageSize=10`;
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((rowData) => {
+        console.log(rowData);
+        setRowData(rowData.objects);
+      });
+  };
+
+  useEffect(async () => {
+    await getData();
+  }, []);
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "160%",
+        display: "flex",
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div
+        className="ag-theme-alpine"
+        style={{
+          height: "100%",
+          width: "100%",
+        }}
+      >
+        <AgGridReact
+          ref={gridRef}
+          rowData={rowData}
+          columnDefs={columnDefs}
+          pagination={true}
+          enableCellChangeFlash={true}
+          paginationPageSize={10}
+        ></AgGridReact>
+      </div>
+
+      {localStorage.getItem("role") === "Employee" ? (
+        <RequestVacation onCreated={handleCreated} />
+      ) : (
+        ""
+      )}
+    </div>
+  );
+};
+
+export default Vacations;

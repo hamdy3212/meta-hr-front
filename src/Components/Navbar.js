@@ -25,13 +25,13 @@ const ResponsiveAppBar = () => {
         { label: "Home", url: "Home" },
         { label: "Employees", url: "Employees" },
         { label: "Departments", url: "departments" },
-        { label: "Applications", url: "applications" },
       ]
       if(userIsInRole(roles.admin) === false){
         tempPages.push({ label: "Tickets", url: "Tickets" });
       }
       if(userIsInRole(roles.admin) || userIsInRole(roles.hrJunior) || userIsInRole(roles.hrSenior)){
         tempPages.push({ label: "Job Postings", url: "Jobs"});
+        tempPages.push({ label: "Applications", url: "applications" });
       }
       if (localStorage.getItem("role") === "Admin") {
         setSettings([
@@ -40,13 +40,15 @@ const ResponsiveAppBar = () => {
       } else if (localStorage.getItem("role") === "Employee") {
         setSettings([
           { label: "My Tickets", url: "Tickets" },
-          { label: "Profile", url: "myProfile"}
+          { label: "Profile", url: "myProfile"},
+          { label: "My Vacations", url: "Vacations" },
       ]);
       } else {
         setSettings([
           { label: "Add Job Posting", url: "addJob" },
           { label: "Create New Employee Account", url: "CreateAccount" },
-          { label: "Profile", url: "myProfile"}
+          { label: "Profile", url: "myProfile"},
+          { label: "Vacation Requests", url: "Vacations" },
         ]);
       }
       setPages(tempPages);

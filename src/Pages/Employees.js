@@ -84,9 +84,11 @@ const PeopleList = () => {
                   </li>
                 )}
               </ul>
-              <button class="btn draw-border"
+              {localStorage.getItem("role") !== "Employee" ? (
+                <button class="btn draw-border"
                       onClick={()=>navigate(`../Attendances/getByEmployeeId/${employee.id}`)}
               >Attendance Log</button>
+              ) : ""}
             </div>
           );
         })}

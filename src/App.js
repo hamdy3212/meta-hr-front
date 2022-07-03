@@ -17,6 +17,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React from "react";
 import { Departments } from "./Pages/Departments";
 import Tickets from "./Pages/Tickets";
+import Vacations from "./Pages/Vacations";
+
 import TestTickets from "./Pages/TestTickets.js";
 import Job from "./Components/Job.js";
 import Test from "./Components/Test.js";
@@ -41,6 +43,8 @@ function App() {
             <Route path="/jobs/:jobID" element={<Job />} />
             <Route path="/myprofile" element={<MyProfile />} />
             <Route path="/Attendances/getByEmployeeId/:employeeID" element={<Attendance />} />
+            <Route path="/vacations" element={<Vacations />} />
+
           </Route>
 
         <Route path="/onboard" element={<Onboard />} />
