@@ -14,6 +14,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import SendMessage from "./SendMessage";
 import Avatar from "@mui/material/Avatar";
 import { apiURL } from "../../envvars";
+import { VisibilityOff } from "@material-ui/icons";
+import { swalShow } from '../../Utility/swal';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -55,8 +57,7 @@ BootstrapDialogTitle.propTypes = {
 export default function ViewTicket({ ticketId, selectedTicket }) {
   const [open, setOpen] = React.useState(false);
   const [messages, setMessages] = useState([]);
-  const handleClickOpen = async () => {
-    setOpen(true);
+  const getData = async () => {
     const requestOptions = {
       method: "GET",
       headers: {
@@ -69,16 +70,24 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
       requestOptions
     );
     if (response.status === 200) {
-      const data2 = await response.json();
-      console.log(data2);
-      setMessages(data2);
+      const msgs = await response.json();
+      setMessages(msgs);
     } else {
-      alert("something is wrong!");
+      const respJson = await response.json();
+      console.log(respJson);
+      swalShow("Something went wrong!", "", "error");
     }
+  }
+  const handleClickOpen = async () => {
+    setOpen(true);
+    getData();
   };
   const handleClose = () => {
     setOpen(false);
   };
+  const handleSent = () => {
+    getData();
+  }
   return (
     <div>
       <Button
@@ -108,9 +117,13 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
           {messages.map((message) => {
             let msgTimestamp = message.timestampUtc.substring(0, message.timestampUtc.lastIndexOf(":"));
             msgTimestamp = msgTimestamp.replace("T", " ")
-            console.log(msgTimestamp);
+            let msgClass = message.senderId === localStorage.getItem("userId") ? "sender" : "receiver";
+            if(message.isInternalNote){
+              msgClass = "internal-note"
+            }
             return (
               <div
+                key={message.id}
                 style={{
                   border: "1px solid grey",
                   margin: "5px",
@@ -121,11 +134,7 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
                   paddingTop: "10px",
                   paddingBottom: "10px"
                 }}
-                className={`${
-                  message.senderId === localStorage.getItem("userId")
-                    ? "sender"
-                    : "receiver"
-                }`}
+                className={msgClass}
               >
                 <div
                   style={{
@@ -142,20 +151,28 @@ export default function ViewTicket({ ticketId, selectedTicket }) {
                       style={{marginRight:"5px"}}
                     />
                     <h2>{message.senderName}</h2>
+                    {message.isInternalNote ? <VisibilityOff style={{
+                      marginTop: "2px",
+                      marginLeft: "0.25rem",
+                      color: "gray",
+                      opacity: "0.7"
+                    }}/> : null}
                   </div>
                   <p style={{ opacity: 0.5 }}>{msgTimestamp}</p>
                 </div>
                 <p 
-                style={
-                  {marginTop: "15px"}
-                }
+                style={{
+                  marginTop: "15px",
+                  marginLeft: "12px",
+                  marginBottom: "10px"
+                }}
                 >{message.content}</p>
               </div>
             );
           })}
         </DialogContent>
         <DialogActions>
-          <SendMessage ticketId={ticketId} />
+          <SendMessage ticketId={ticketId} onSent={handleSent} />
         </DialogActions>
       </BootstrapDialog>
     </div>

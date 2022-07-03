@@ -123,6 +123,7 @@ body,
   padding: 0;
   list-style: none;
   margin: 1em;
+  font-size: 23px;
 }
 
 .social-icons li {
@@ -191,4 +192,8 @@ body,
 }
 #applicationInfo > * {
   margin-bottom: 20px;
+}
+
+.internal-note {
+  background-color: wheat;
 }

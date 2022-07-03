@@ -5,11 +5,17 @@ import CreateAnnouncement from "../Components/createAnnouncement";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./Home.css";
 import { apiURL } from "../envvars";
+import { userIsInRole, roles } from "../Utility/roles";
 
 const Home = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsPageNumber, setAnnouncementsPageNumber] = useState(1);
   const [hasMoreAnnouncements, setHasMoreAnnouncements] = useState(true);
+  const handleCreated = () => {
+    setAnnouncements(loadAnnouncements());
+    setAnnouncementsPageNumber(1);
+    setHasMoreAnnouncements(true);
+  }
   const requestOptions = {
     headers: {
       "Content-Type": "application/json",
@@ -31,7 +37,6 @@ const Home = () => {
       });
     setAnnouncementsPageNumber(announcementsPageNumber + 1);
   };
-
   useEffect(() => {
     loadAnnouncements();
   }, []);
@@ -40,7 +45,7 @@ const Home = () => {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "center"
       }}
     >
       <Grid xs={6} style={{ padding: "0 5px" }}>
@@ -59,7 +64,7 @@ const Home = () => {
           >
             Announcements
           </h1>
-          <CreateAnnouncement />
+          <CreateAnnouncement onCreated={ handleCreated } />
         </div>
         {announcements.length === 0 ? (
           <h1>There is no Announcements.</h1>
@@ -74,13 +79,14 @@ const Home = () => {
                 <b>You have seen all the announcements</b>
               </p>
             }
+            style={{maxWidth: "720px"}}
           >
             {announcements.map((announcement, index) => {
               return (
                 <div
                   key={index}
                   className="announcement-card"
-                  style={{ marginBottom: "15px" }}
+                  style={{ marginBottom: "15px", minWidth:"400px" }}
                 >
                   <div className="announcement-card-header">
                     <Avatar
@@ -99,7 +105,8 @@ const Home = () => {
                       </p>
                     </div>
                   </div>
-                  <hr style={{ width: "40%", marginLeft: "0px" }} />
+                  <hr style={{ width: "100%", marginLeft: "0px" }} />
+                  <h3>{announcement.title}</h3>
                   <p>{announcement.content} </p>
                 </div>
               );

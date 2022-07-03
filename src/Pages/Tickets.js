@@ -23,6 +23,9 @@ const Tickets = () => {
   const [ticketId, setTicketId] = useState("");
   const [ticketStatus, setTicketStatus] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState("");
+  const handleCreated = () => {
+    getData();
+  }
   const statusFormatter = (params) => {
     if (params.value) {
       return "Open";
@@ -63,13 +66,14 @@ const Tickets = () => {
     setTicketStatus(selectedRows[0].isOpen);
     setSelectedTicket(selectedRows[0]);
   }, []);
-  const requestOptions = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  }; // fetch Tickets
-  useEffect(async () => {
+
+  const getData = async () => {
+    const requestOptions = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }; // fetch Tickets
     const url =
       (await localStorage.getItem("role")) === "Employee"
         ? `${apiURL}/api/Tickets/myTickets`
@@ -84,6 +88,10 @@ const Tickets = () => {
           setRowData(rowData.objects);
         }
       });
+  }
+  
+  useEffect(async () => {
+    await getData();
   }, []);
   const closeOpenTicket = async () => {
     const requestOptions = {
@@ -147,7 +155,7 @@ const Tickets = () => {
           flexDirection: "row",
         }}
       >
-        {localStorage.getItem("role") === "Employee" ? <CreateTicket /> : ""}
+        {localStorage.getItem("role") === "Employee" ? <CreateTicket onCreated={handleCreated}/> : ""}
         <ViewTicket ticketId={ticketId} selectedTicket={selectedTicket} />
         {ticketStatus === false ? (
           <Button
