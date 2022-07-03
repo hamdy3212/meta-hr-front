@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -10,9 +10,12 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import AddAlertIcon from '@mui/icons-material/AddAlert';
+import AddAlertIcon from "@mui/icons-material/AddAlert";
 import { apiURL } from "../envvars";
-import { swalToast, swalShowErrors } from '../Utility/swal';
+import { swalToast, swalShowErrors, swalShow } from "../Utility/swal";
+import { MenuItem, Select } from "@mui/material";
+import { roles, userIsInRole } from "../Utility/roles";
+import { getUserDepId } from "../Utility/utility";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -52,10 +55,40 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function CustomizedDialogs( { onCreated } ) {
+export default function CustomizedDialogs() {
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [departmentId, setDepartmentId] = useState(0);
+  const [departments, setDepartments] = useState([
+    { id: 0, name: "Global" },
+  ]);
+
+  useEffect(() => {
+    async function setDepId() {
+      const tmp = await getUserDepId();
+      setDepartmentId(tmp);
+    }
+    async function setDeps(){
+      const requestOptions = {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json"
+        }
+      }
+      const resp = await fetch(`${apiURL}/api/Departments`, requestOptions);
+      if(resp.status !== 200){
+        swalShow("Something went wrong", "", "error");
+      }
+      const respJson = await resp.json();
+      setDepartments([...departments, ...respJson])
+    }
+    if(userIsInRole(roles.departmentDirector)){
+      setDepId();
+    } else {
+      setDeps();
+    }
+  }, [])
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -68,12 +101,14 @@ export default function CustomizedDialogs( { onCreated } ) {
       setTitle(event.target.value);
     } else if (event.target.name === "content") {
       setContent(event.target.value);
+    } else if (event.target.name === "department") {
+      setDepartmentId(event.target.value);
     }
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
     // eslint-disable-next-line no-console
-    const requestOptions = {
+    let requestOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,26 +117,28 @@ export default function CustomizedDialogs( { onCreated } ) {
       },
       body: JSON.stringify({
         title: title,
-        content: content,
-      }),
+        content: content
+      })
     };
-    const response = await fetch(
-      `${apiURL}/api/Announcements/createGlobalAnnouncement`,
-      requestOptions
-    );
+    let requestUrl = `${apiURL}/api/Announcements/createGlobalAnnouncement`;
+    if(departmentId != 0){
+      requestUrl = `${apiURL}/api/Announcements/createAnnouncement?departmentId=${departmentId}`;
+    }
+    const response = await fetch(requestUrl, requestOptions);
     if (response.status === 200) {
       swalToast("Announcement added successfully", "success");
-      onCreated();
       setOpen(false);
+      window.location.reload();
     } else {
       let respJson = await response.json();
+      setOpen(false);
       swalShowErrors("Something went wrong!", respJson.errors);
     }
   };
   return (
     <div>
-      <Button  variant="outlined" color="success" onClick={handleClickOpen}>
-        <AddAlertIcon/>
+      <Button variant="outlined" color="success" onClick={handleClickOpen}>
+        <AddAlertIcon />
       </Button>
       <BootstrapDialog
         onClose={handleClose}
@@ -114,14 +151,17 @@ export default function CustomizedDialogs( { onCreated } ) {
         >
           Create Announcement
         </BootstrapDialogTitle>
-        <DialogContent dividers style={{display:"flex", flexDirection:"column", width:"500px"}}>
+        <DialogContent
+          dividers
+          style={{ display: "flex", flexDirection: "column", width: "500px" }}
+        >
           <TextField
             id="outlined-basic"
             label="Title"
             name="title"
             variant="outlined"
             onChange={handleChange}
-            style={{marginBottom:"20px"}}
+            style={{ marginBottom: "20px" }}
           />
           <TextField
             id="outlined-basic"
@@ -132,6 +172,28 @@ export default function CustomizedDialogs( { onCreated } ) {
             rows={4}
             onChange={handleChange}
           />
+          {
+            userIsInRole(roles.hrSenior) || userIsInRole(roles.hrJunior) ?
+            <Select
+              id="department"
+              label="Department"
+              labelId="Department"
+              name="department"
+              onChange={handleChange}
+              value={departmentId}
+              style={{
+                marginTop: "7px"
+              }}
+            >
+              {departments.map((dep) => (
+                <MenuItem key={dep.id} value={dep.id}>
+                  {dep.name}
+                </MenuItem>
+              ))}
+            </Select>
+            :
+            null
+          }
         </DialogContent>
         <DialogActions>
           <Button autoFocus color="success" onClick={handleSubmit}>

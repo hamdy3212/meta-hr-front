@@ -25,13 +25,13 @@ const ResponsiveAppBar = () => {
         { label: "Home", url: "Home" },
         { label: "Employees", url: "Employees" },
         { label: "Departments", url: "departments" },
-        { label: "Applications", url: "applications" },
       ]
       if(userIsInRole(roles.admin) === false){
         tempPages.push({ label: "Tickets", url: "Tickets" });
       }
       if(userIsInRole(roles.admin) || userIsInRole(roles.hrJunior) || userIsInRole(roles.hrSenior)){
         tempPages.push({ label: "Job Postings", url: "Jobs"});
+        tempPages.push({ label: "Applications", url: "applications" })
       }
       if (localStorage.getItem("role") === "Admin") {
         setSettings([

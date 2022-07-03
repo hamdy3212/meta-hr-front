@@ -11,11 +11,7 @@ const Home = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [announcementsPageNumber, setAnnouncementsPageNumber] = useState(1);
   const [hasMoreAnnouncements, setHasMoreAnnouncements] = useState(true);
-  const handleCreated = () => {
-    setAnnouncements(loadAnnouncements());
-    setAnnouncementsPageNumber(1);
-    setHasMoreAnnouncements(true);
-  }
+
   const requestOptions = {
     headers: {
       "Content-Type": "application/json",
@@ -45,7 +41,7 @@ const Home = () => {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
       }}
     >
       <Grid xs={6} style={{ padding: "0 5px" }}>
@@ -64,7 +60,11 @@ const Home = () => {
           >
             Announcements
           </h1>
-          <CreateAnnouncement onCreated={ handleCreated } />
+          {userIsInRole(roles.hrSenior) ||
+          userIsInRole(roles.hrJunior) ||
+          userIsInRole(roles.departmentDirector) ? (
+            <CreateAnnouncement />
+          ) : null}
         </div>
         {announcements.length === 0 ? (
           <h1>There is no Announcements.</h1>
@@ -79,14 +79,14 @@ const Home = () => {
                 <b>You have seen all the announcements</b>
               </p>
             }
-            style={{maxWidth: "720px"}}
+            style={{ maxWidth: "720px" }}
           >
             {announcements.map((announcement, index) => {
               return (
                 <div
                   key={index}
                   className="announcement-card"
-                  style={{ marginBottom: "15px", minWidth:"400px" }}
+                  style={{ marginBottom: "15px", minWidth: "400px" }}
                 >
                   <div className="announcement-card-header">
                     <Avatar
@@ -99,11 +99,21 @@ const Home = () => {
                     />
                     <div>
                       <h2>{announcement.authorName}</h2>
-                      {/* <h3>title or position</h3> */}
                       <p style={{ margin: "0px", opacity: "0.7" }}>
-                        created at :{announcement.createdAt.split("T")[0]}
+                        {announcement.createdAt.split("T")[0]}
                       </p>
                     </div>
+                    <h4
+                      style={{
+                        marginLeft: "auto",
+                        marginRight: "10px",
+                        color: "#6c757d",
+                      }}
+                    >
+                      {announcement.departmentName != null
+                        ? announcement.departmentName
+                        : "Global"}
+                    </h4>
                   </div>
                   <hr style={{ width: "100%", marginLeft: "0px" }} />
                   <h3>{announcement.title}</h3>
