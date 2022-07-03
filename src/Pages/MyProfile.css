@@ -1,0 +1,23 @@
+#myProfilePage .form-control:focus {
+    box-shadow: none;
+    border-color: #1976d2
+}
+
+#myProfilePage .profile-button {
+    background: #1976d2;
+    box-shadow: none;
+    border: none
+}
+
+#myProfilePage .profile-button:hover {
+    background: #0c5baa;
+}
+
+#myProfilePage .profile-button:active {
+    background: #3e87d1;
+    box-shadow: none
+}
+
+#myProfilePage .labels {
+    font-size: 20px
+}

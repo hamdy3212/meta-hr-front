@@ -38,11 +38,15 @@ const ResponsiveAppBar = () => {
           { label: "Create New Employee Account", url: "CreateAccount" },
         ]);
       } else if (localStorage.getItem("role") === "Employee") {
-        setSettings([{ label: "Tickets", url: "Tickets" }]);
+        setSettings([
+          { label: "My Tickets", url: "Tickets" },
+          { label: "Profile", url: "myProfile"}
+      ]);
       } else {
         setSettings([
           { label: "Add Job Posting", url: "addJob" },
           { label: "Create New Employee Account", url: "CreateAccount" },
+          { label: "Profile", url: "myProfile"}
         ]);
       }
       setPages(tempPages);

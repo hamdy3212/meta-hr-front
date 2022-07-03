@@ -20,6 +20,7 @@ import Tickets from "./Pages/Tickets";
 import TestTickets from "./Pages/TestTickets.js";
 import Job from "./Components/Job.js";
 import Test from "./Components/Test.js";
+import MyProfile from "./Pages/MyProfile.js";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="/testtickets" element={<TestTickets />} />
             <Route path="/applications/:applicationID" element={<ViewApplication />} />
             <Route path="/jobs/:jobID" element={<Job />} />
+            <Route path="/myprofile" element={<MyProfile />} />
             <Route path="/Attendances/getByEmployeeId/:employeeID" element={<Attendance />} />
           </Route>
 
