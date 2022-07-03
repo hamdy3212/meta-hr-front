@@ -8,6 +8,7 @@ import {
   swalToast,
   swalShowErrors,
 } from "../../Utility/swal";
+import Grid from '@mui/material/Grid';
 
 import "./Notes.css";
 const Notes = ({ applicationID }) => {
@@ -51,8 +52,8 @@ const Notes = ({ applicationID }) => {
     );
     if (response.status === 200) {
       const data2 = await response.json();
-      console.log(data2);
       swalToast("Note Added Successfully.", "success");
+      setNoteContent("");
       fetchNotes();
     } else {
       const respJson = await response.json();
@@ -81,7 +82,8 @@ const Notes = ({ applicationID }) => {
     );
     const respJson = await response.json();
     if (response.status === 200) {
-      swalShow("Note Updated Successfully!", "", "success");
+      swalToast("Note Updated Successfully!", "success");
+      
       setEditNote("");
       setNoteContent("");
       fetchNotes();
@@ -114,6 +116,8 @@ const Notes = ({ applicationID }) => {
     );
     if (response.status === 200) {
       swalToast("Note deleted successfully.");
+      setEditNote("");
+      setNoteContent("");
       fetchNotes();
     } else {
       const respJson = await response.json();
@@ -127,8 +131,8 @@ const Notes = ({ applicationID }) => {
     return <h1>Loading...</h1>;
   }
   return (
-    <div style={{ maxWidth: "500px" }}>
-      <div>
+    <Grid item xs={12} md={6} style={{padding:"0 20px"}}>
+      <div style={{display:"flex", alignItems:"center"}}>
         <textarea
           className="note-text-area"
           rows="9"
@@ -172,7 +176,7 @@ const Notes = ({ applicationID }) => {
           );
         })}
       </div>
-    </div>
+    </Grid>
   );
 };
 

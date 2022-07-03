@@ -120,7 +120,6 @@ export const Departments = () => {
           <Button
             variant="contained"
             onClick={() => deleteDepartment()}
-            disabled={console.log("first")}
             color="error"
           >
             delete

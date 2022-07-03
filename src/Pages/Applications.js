@@ -137,9 +137,7 @@ const Applications = () => {
       >
         <Button
           variant="contained"
-          onClick={() =>
-            navigate(`../applications/${applicationId}`, { replace: true })
-          }
+          onClick={()=>navigate(`../applications/${applicationId}`)}
           disabled={!applicationId}
         >
           View Application

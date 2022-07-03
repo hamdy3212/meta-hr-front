@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { apiURL } from "../envvars";
+import { useNavigate } from "react-router-dom";
 
 const PeopleList = () => {
+  let navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const requestOptions = {
     headers: {
@@ -82,7 +84,9 @@ const PeopleList = () => {
                   </li>
                 )}
               </ul>
-              <button class="btn draw-border">Attendance Log</button>
+              <button class="btn draw-border"
+                      onClick={()=>navigate(`../Attendances/getByEmployeeId/${employee.id}`)}
+              >Attendance Log</button>
             </div>
           );
         })}
