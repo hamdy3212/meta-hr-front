@@ -235,13 +235,13 @@ export default function ViewApplication() {
           <li>
             {CV && (
               <a href={CV} target="_blank">
-                <i className="fa fa-file"></i>
+                <i className="fa-solid fa-file-lines" style={{marginLeft:'3px'}}></i>
               </a>
             )}
           </li>
         </ul>
         <Button variant="contained" color="success" onClick={GetCV}>
-          Get CV <i style={{marginLeft:"10px"}}className="fa fa-file"></i>
+          Get CV
         </Button>
         </div>
       </Grid>
