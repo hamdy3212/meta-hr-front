@@ -1,3 +1,4 @@
+import { width } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import ErrorsDisplayer from "../Components/ErrorsDisplayer";
 import { apiURL } from "../envvars";
@@ -94,9 +95,11 @@ const MyProfile = () => {
   };
   const handleSubmit = async () => {
     const cmd = {
-      gitHubURL: profileData.gitHubURL !== '' ? profileData.gitHubURL : null,
-      linkedInURL: profileData.linkedInURL !== '' ? profileData.linkedInURL : null,
-      personalWebsite: profileData.personalWebsite !== '' ? profileData.personalWebsite : null,
+      gitHubURL: profileData.gitHubURL !== "" ? profileData.gitHubURL : null,
+      linkedInURL:
+        profileData.linkedInURL !== "" ? profileData.linkedInURL : null,
+      personalWebsite:
+        profileData.personalWebsite !== "" ? profileData.personalWebsite : null,
     };
     const requestOptions = {
       method: "POST",
@@ -168,12 +171,16 @@ const MyProfile = () => {
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
               <img
                 class="rounded-circle mt-5"
-                width="150px"
                 src={
                   profileData.profilePictureURL ??
                   "https://www.seekpng.com/png/detail/428-4287240_no-avatar-user-circle-icon-png.png"
                 }
-              />
+                style={{
+                  objectFit: 'cover',
+                  width: '150px',
+                  height: '150px'
+                }}
+              /> 
               {profileData.profilePictureURL !== "" &&
               profileData.profilePictureURL !== null ? (
                 <button
