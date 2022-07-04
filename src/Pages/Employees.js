@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { apiURL } from "../envvars";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const PeopleList = () => {
   let navigate = useNavigate();
@@ -21,8 +22,18 @@ const PeopleList = () => {
   }, []);
   return (
     <div>
-      <h1 style={{textAlign: "center", marginTop: "18px"}}>Employees</h1>
-      <div class="container" style={{marginTop:"-23px"}}>
+      <h1 style={{ textAlign: "center", marginTop: "8px" }}>Employees</h1>
+      <div style={{display: "flex", paddingRight:"70px"}}>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: "auto" }}
+          onClick={() => navigate("/createAccount")}
+        >
+          Create New Employee
+        </Button>
+      </div>
+      <div class="container" style={{ marginTop: "-23px" }}>
         {employees.map((employee) => {
           return (
             <div class="card" key={employee.id}>
@@ -54,7 +65,7 @@ const PeopleList = () => {
                   style={{
                     color: "white",
                     textDecoration: "none",
-                    fontSize: "1.25rem"
+                    fontSize: "1.25rem",
                   }}
                   href={"mailto:" + employee.email}
                 >
@@ -85,10 +96,17 @@ const PeopleList = () => {
                 )}
               </ul>
               {localStorage.getItem("role") !== "Employee" ? (
-                <button class="btn draw-border"
-                      onClick={()=>navigate(`../Attendances/getByEmployeeId/${employee.id}`)}
-              >Attendance Log</button>
-              ) : ""}
+                <button
+                  class="btn draw-border"
+                  onClick={() =>
+                    navigate(`../Attendances/getByEmployeeId/${employee.id}`)
+                  }
+                >
+                  Attendance Log
+                </button>
+              ) : (
+                ""
+              )}
             </div>
           );
         })}

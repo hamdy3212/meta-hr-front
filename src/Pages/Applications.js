@@ -106,8 +106,10 @@ const Applications = () => {
         justifyContent: "center",
         flexDirection: "column",
         alignItems: "center",
+        marginTop: "8px"
       }}
     >
+      <h1 style={{textAlign:"center", marginBottom: "10px"}}>Job Applications</h1>
       <div
         className="ag-theme-alpine"
         style={{
@@ -131,8 +133,10 @@ const Applications = () => {
         style={{
           padding: "0 185px 0 185px",
           display: "flex",
-          justifyContent: "space-around",
+          justifyContent: "space-between",
           flexDirection: "row",
+          minWidth:"360px",
+          marginTop:"15px"
         }}
       >
         <Button

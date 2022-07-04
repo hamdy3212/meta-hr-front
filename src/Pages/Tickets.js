@@ -126,8 +126,10 @@ const Tickets = () => {
         justifyContent: "center",
         flexDirection: "column",
         alignItems: "center",
+        marginTop: "8px"
       }}
     >
+      <h1 style={{textAlign:"center", marginBottom: "10px"}}>Vacation Requests</h1>
       <div
         className="ag-theme-alpine"
         style={{
@@ -151,8 +153,10 @@ const Tickets = () => {
         style={{
           padding: "0 185px 0 185px",
           display: "flex",
-          justifyContent: "space-around",
+          justifyContent: "space-between",
           flexDirection: "row",
+          minWidth: "262px",
+          marginTop: "15px"
         }}
       >
         {localStorage.getItem("role") === "Employee" ? <CreateTicket onCreated={handleCreated}/> : ""}

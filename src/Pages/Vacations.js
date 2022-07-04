@@ -164,8 +164,10 @@ const Vacations = () => {
         justifyContent: "center",
         flexDirection: "column",
         alignItems: "center",
+        marginTop: "8px"
       }}
     >
+      <h1 style={{textAlign:"center", marginBottom: "10px"}}>Vacation Requests</h1>
       <div
         className="ag-theme-alpine"
         style={{
@@ -182,8 +184,9 @@ const Vacations = () => {
           paginationPageSize={10}
         ></AgGridReact>
       </div>
-
-      <RequestVacation onCreated={handleCreated} />
+      <div style={{marginTop:"15px"}}>
+        <RequestVacation onCreated={handleCreated} />
+      </div>
     </div>
   );
 };

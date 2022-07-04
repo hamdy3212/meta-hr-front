@@ -91,13 +91,15 @@ export const Departments = () => {
         justifyContent: "center",
         flexDirection: "column",
         alignItems: "center",
+        marginTop:"8px"
       }}
     >
+      <h1 style={{textAlign:"center", marginBottom: "10px"}}>Departments</h1>
       <div
         className="ag-theme-alpine"
         style={{
           height: "100%",
-          width: "35%",
+          width: "442px"
         }}
       >
         <AgGridReact
@@ -113,8 +115,10 @@ export const Departments = () => {
           style={{
             padding: "0 185px 0 185px",
             display: "flex",
-            justifyContent: "space-around",
+            justifyContent: "space-between",
             flexDirection: "row",
+            minWidth:"442px",
+            marginTop:"15px"
           }}
         >
           <Button

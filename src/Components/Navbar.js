@@ -42,19 +42,8 @@ const ResponsiveAppBar = () => {
         tempPages.push({ label: "My Vacations", url: "vacations" });
         tempPages.push({ label: "My Tickets", url: "Tickets" });
       }
-      if (localStorage.getItem("role") === "Admin") {
-        setSettings([
-          { label: "Create New Employee Account", url: "CreateAccount" },
-        ]);
-      } else if (userIsInRole(roles.employee)) {
-        setSettings([
-          { label: "My Profile", url: "myProfile" },
-        ]);
-      } else {
-        setSettings([
-          { label: "Create New Employee Account", url: "CreateAccount" },
-          { label: "My Profile", url: "myProfile" },
-        ]);
+      if (userIsInRole(roles.admin) === false) {
+        setSettings([{ label: "My Profile", url: "myProfile" }]);
       }
       setPages(tempPages);
     }
