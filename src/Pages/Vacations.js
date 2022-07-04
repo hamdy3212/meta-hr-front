@@ -4,6 +4,8 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import RequestVacation from "../Components/Vacations/RequestVacation";
+import DenyVacation from "../Components/Vacations/DenyVacation";
+
 import React, {
   useState,
   useEffect,
@@ -28,9 +30,10 @@ const Vacations = () => {
     return params.value.split("T")[0];
   };
   const fullName = (params) => {
-    if (localStorage.getItem("role") !== "Employee") {
-      return params.data.employeeFirstName + " " + params.data.employeeLastName;
-    } else if (params.data.reviewerFirstName === null) {
+    return params.data.employeeFirstName + " " + params.data.employeeLastName;
+  };
+  const reviewedBy = (params) => {
+    if (params.data.reviewerFirstName === null) {
       return "";
     }
     return params.data.reviewerFirstName + " " + params.data.reviewerLastName;
@@ -44,7 +47,7 @@ const Vacations = () => {
       },
       body: JSON.stringify({
         state: 1,
-        denialReason: "test",
+        denialReason: "",
       }),
     };
     const response = await fetch(
@@ -59,30 +62,7 @@ const Vacations = () => {
       swalShowErrors("Something went wrong", respJson.errors);
     }
   };
-  const denyVacation = async (id) => {
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        state: 2,
-        denialReason: "test",
-      }),
-    };
-    const response = await fetch(
-      `${apiURL}/api/VacationRequests/${id}`,
-      requestOptions
-    );
-    if (response.status === 200) {
-      swalToast("Vacation Request Denied", "success");
-      getData();
-    } else {
-      const respJson = await response.json();
-      swalShowErrors("Something went wrong", respJson.errors);
-    }
-  };
+
   const stateChanger = (props) => {
     if (props.value === "Pending") {
       return (
@@ -95,13 +75,7 @@ const Vacations = () => {
           >
             Accept
           </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => denyVacation(props.data.id)}
-          >
-            Deny
-          </Button>
+          <DenyVacation id={props.data.id} onCreated={handleCreated} />
         </div>
       );
     } else {
@@ -115,12 +89,17 @@ const Vacations = () => {
           { field: "employeeEmail" },
           { field: "departmentName" },
           { field: "state", cellRenderer: stateChanger },
+          {
+            field: "ReviewerFirstName",
+            headerName: "Reviewed by",
+            valueFormatter: reviewedBy,
+          },
         ]
       : [
           {
             field: "ReviewerFirstName",
             headerName: "Reviewed by",
-            valueFormatter: fullName,
+            valueFormatter: reviewedBy,
           },
           { field: "state" },
         ];
@@ -164,10 +143,12 @@ const Vacations = () => {
         justifyContent: "center",
         flexDirection: "column",
         alignItems: "center",
-        marginTop: "8px"
+        marginTop: "8px",
       }}
     >
-      <h1 style={{textAlign:"center", marginBottom: "10px"}}>Vacation Requests</h1>
+      <h1 style={{ textAlign: "center", marginBottom: "10px" }}>
+        Vacation Requests
+      </h1>
       <div
         className="ag-theme-alpine"
         style={{
@@ -184,7 +165,7 @@ const Vacations = () => {
           paginationPageSize={10}
         ></AgGridReact>
       </div>
-      <div style={{marginTop:"15px"}}>
+      <div style={{ marginTop: "15px" }}>
         <RequestVacation onCreated={handleCreated} />
       </div>
     </div>

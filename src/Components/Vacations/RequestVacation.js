@@ -84,6 +84,7 @@ export default function CustomizedDialogs({ onCreated }) {
       Number.parseInt(numberOfDays) > 14 ||
       Number.parseInt(numberOfDays) < 1
     ) {
+      console.log(numberOfDays)
       setErrors(["Number of Days must be a number between 1 and 14."]);
       return;
     }

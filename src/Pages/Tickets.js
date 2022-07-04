@@ -129,7 +129,7 @@ const Tickets = () => {
         marginTop: "8px"
       }}
     >
-      <h1 style={{textAlign:"center", marginBottom: "10px"}}>Vacation Requests</h1>
+      <h1 style={{textAlign:"center", marginBottom: "10px"}}>Tickets</h1>
       <div
         className="ag-theme-alpine"
         style={{
