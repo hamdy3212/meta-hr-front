@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
@@ -13,15 +13,48 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import { apiURL } from '../envvars';
+import { apiURL } from "../envvars";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { swalShowErrors } from "../Utility/swal";
 
 const theme = createTheme();
 
 function Register() {
   const [selectedImage, setSelectedImage] = useState(null);
-  const { userId, token } = useParams();
+  const navigate = useNavigate();
+  let [searchParams, setSearchParams] = useSearchParams();
+  let userId = searchParams.get("userId");
+  let token = searchParams.get("token");
+  useEffect(() => {
+    if (localStorage.getItem("userId") !== null) {
+      navigate("/");
+      return;
+    }
+    async function checkToken() {
+      const requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          token: token
+        })
+      };
+      const resp = await fetch(
+        `${apiURL}/api/account/verifyToken`,
+        requestOptions
+      );
+      if (resp.status !== 200) {
+        const respJson = await resp.json();
+        swalShowErrors("Invalid Onboarding Link", respJson.errors);
+      }
+    }
+
+    checkToken();
+  }, []);
   const handleSubmit = async (event) => {
-    
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let queryParams = new URLSearchParams(document.location.search);
@@ -37,24 +70,20 @@ function Register() {
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhr.onload = () => {
-        let data = xhr.response;
-        console.log(data);
-        if (data.isSuccessful === false) {
-          console.log(data.errors);
-        }
-      };
-      xhr.onreadystatechange = function () {
-        if (xhr.status !== 200) {
-          console.log("response code not 200!");
-          console.log(xhr.status);
-        }
-      };
+      let data = xhr.response;
+      console.log(data);
+      if (data.isSuccessful === false) {
+        swalShowErrors("Something went wrong", data.errors);
+      }
+    };
     xhr.send(data);
-
   };
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" style={{ marginTop: "50px" }}>
+      <h1 style={{ textAlign: "center", marginTop: "8px" }}>
+        Complete Your Registration
+      </h1>
+      <Container component="main" maxWidth="xs">
         <Box
           sx={{
             display: "flex",
@@ -62,9 +91,6 @@ function Register() {
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5">
-            onboard
-          </Typography>
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -83,9 +109,7 @@ function Register() {
                   <button onClick={() => setSelectedImage(null)}>Remove</button>
                 </div>
               )}
-              <br />
 
-              <br />
               <input
                 type="file"
                 name="ProfilePicture"
@@ -160,7 +184,7 @@ function Register() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Register
+              Submit
             </Button>
           </Box>
         </Box>

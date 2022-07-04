@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { apiURL } from "../envvars";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import { userIsInRole, roles } from "../Utility/roles";
 
 const PeopleList = () => {
   let navigate = useNavigate();
@@ -23,7 +24,10 @@ const PeopleList = () => {
   return (
     <div>
       <h1 style={{ textAlign: "center", marginTop: "8px" }}>Employees</h1>
-      <div style={{display: "flex", paddingRight:"70px"}}>
+      {userIsInRole(roles.admin) ||
+      userIsInRole(roles.hrJunior) ||
+      userIsInRole(roles.hrSenior)
+        ? <div style={{ display: "flex", paddingRight: "70px" }}>
         <Button
           variant="contained"
           color="primary"
@@ -33,6 +37,7 @@ const PeopleList = () => {
           Create New Employee
         </Button>
       </div>
+        : ""}
       <div class="container" style={{ marginTop: "-23px" }}>
         {employees.map((employee) => {
           return (

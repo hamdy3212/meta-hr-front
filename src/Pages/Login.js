@@ -11,13 +11,13 @@ import Container from "@mui/material/Container";
 import { useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { apiURL } from "../envvars";
-import ErrorDisplayer from '../Components/ErrorsDisplayer'
+import ErrorDisplayer from "../Components/ErrorsDisplayer";
 
 const theme = createTheme();
 
 function Login() {
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
@@ -37,13 +37,10 @@ function Login() {
         password: data.get("password"),
       }),
     };
-    const response = await fetch(
-      `${apiURL}/api/Account/Login`,
-      requestOptions
-    );
+    const response = await fetch(`${apiURL}/api/Account/Login`, requestOptions);
     if (response.status === 200) {
       const data2 = await response.json();
-      console.log(data2)
+      console.log(data2);
       localStorage.setItem("token", data2.localUserInfo.token);
       localStorage.setItem("role", data2.localUserInfo.roles[0]);
       localStorage.setItem("roles", data2.localUserInfo.roles);
@@ -65,7 +62,6 @@ function Login() {
             alignItems: "center",
           }}
         >
-       
           <Typography component="h1" variant="h5">
             Login
           </Typography>
@@ -97,7 +93,7 @@ function Login() {
               id="password"
               autoComplete="current-password"
             />
-            <ErrorDisplayer errors={loginErrs}/>
+            <ErrorDisplayer errors={loginErrs} />
             <Button
               type="submit"
               fullWidth
@@ -108,7 +104,11 @@ function Login() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/forgotpassword" variant="body2">
+                <Link
+                  onClick={() => navigate("/forgotPassword")}
+                  style={{ cursor: "pointer" }}
+                  variant="body2"
+                >
                   Forgot Password?
                 </Link>
               </Grid>
