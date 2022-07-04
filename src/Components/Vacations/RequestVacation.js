@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { apiURL } from "../../envvars";
 import { swalShowErrors, swalToast } from "../../Utility/swal";
+import ErrorsDisplayer from "../ErrorsDisplayer";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -54,18 +55,38 @@ BootstrapDialogTitle.propTypes = {
 export default function CustomizedDialogs({ onCreated }) {
   const [open, setOpen] = React.useState(false);
   const [from, setFrom] = useState("");
-  const [numberOfDays, setNumberOfDays] = useState("");
-  console.log(numberOfDays, from)
+  const [numberOfDays, setNumberOfDays] = useState(1);
+  const [errors, setErrors] = useState([]);
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
+    setErrors([]);
+    setFrom("");
+    setNumberOfDays(1);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     // eslint-disable-next-line no-console
+    setErrors([]);
+    if (from === "" || from === null) {
+      setErrors(["The From field is required."]);
+      return;
+    }
+    if (numberOfDays === "" || numberOfDays === null) {
+      setErrors(["The Number of Days field is required."]);
+      return;
+    }
+    if (
+      Number.isInteger(numberOfDays) === false ||
+      Number.parseInt(numberOfDays) > 14 ||
+      Number.parseInt(numberOfDays) < 1
+    ) {
+      setErrors(["Number of Days must be a number between 1 and 14."]);
+      return;
+    }
     const requestOptions = {
       method: "POST",
       headers: {
@@ -114,16 +135,22 @@ export default function CustomizedDialogs({ onCreated }) {
         >
           <label class="labels">Start Date</label>
           <input
-          style={{fontSize:"28px", marginBottom:"10px"}}
+            id="vacationRequestDate"
+            style={{ marginBottom: "10px" }}
             type="date"
             onChange={(e) => setFrom(e.target.value)}
-            class="form-control"
+            className="form-control"
           />
           <TextField
             id="numberOfDays"
-            label="number of days"
+            label="Number of Days"
+            type="number"
+            defaultValue={1}
             onChange={(e) => setNumberOfDays(e.target.value)}
           />
+          <div style={{marginTop: "10px"}}>
+            <ErrorsDisplayer errors={errors} />
+          </div>
         </DialogContent>
         <DialogActions>
           <Button autoFocus color="success" onClick={handleSubmit}>

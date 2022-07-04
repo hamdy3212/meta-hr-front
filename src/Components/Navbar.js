@@ -12,43 +12,48 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router";
-import { userIsInRole, roles } from '../Utility/roles';
+import { userIsInRole, roles } from "../Utility/roles";
 
 const ResponsiveAppBar = () => {
   let navigate = useNavigate();
   const [pages, setPages] = React.useState([]);
   const [settings, setSettings] = React.useState([]);
   React.useEffect(() => {
-
     if (localStorage.getItem("token")) {
       let tempPages = [
         { label: "Home", url: "Home" },
         { label: "Employees", url: "Employees" },
         { label: "Departments", url: "departments" },
-      ]
-      if(userIsInRole(roles.admin) === false){
-        tempPages.push({ label: "Tickets", url: "Tickets" });
+      ];
+      if (userIsInRole(roles.admin) === false) {
       }
-      if(userIsInRole(roles.admin) || userIsInRole(roles.hrJunior) || userIsInRole(roles.hrSenior)){
-        tempPages.push({ label: "Job Postings", url: "Jobs"});
+      if (
+        userIsInRole(roles.admin) ||
+        userIsInRole(roles.hrJunior) ||
+        userIsInRole(roles.hrSenior)
+      ) {
+        tempPages.push({ label: "Job Postings", url: "Jobs" });
         tempPages.push({ label: "Applications", url: "applications" });
+        if (userIsInRole(roles.admin) === false) {
+          tempPages.push({ label: "Vacation Requests", url: "vacations" });
+          tempPages.push({ label: "Tickets", url: "Tickets" });
+        }
+      } else {
+        tempPages.push({ label: "My Vacations", url: "vacations" });
+        tempPages.push({ label: "My Tickets", url: "Tickets" });
       }
       if (localStorage.getItem("role") === "Admin") {
         setSettings([
           { label: "Create New Employee Account", url: "CreateAccount" },
         ]);
-      } else if (localStorage.getItem("role") === "Employee") {
+      } else if (userIsInRole(roles.employee)) {
         setSettings([
-          { label: "My Tickets", url: "Tickets" },
-          { label: "Profile", url: "myProfile"},
-          { label: "My Vacations", url: "Vacations" },
-      ]);
+          { label: "My Profile", url: "myProfile" },
+        ]);
       } else {
         setSettings([
-          { label: "Add Job Posting", url: "addJob" },
           { label: "Create New Employee Account", url: "CreateAccount" },
-          { label: "Profile", url: "myProfile"},
-          { label: "Vacation Requests", url: "Vacations" },
+          { label: "My Profile", url: "myProfile" },
         ]);
       }
       setPages(tempPages);
@@ -146,7 +151,7 @@ const ResponsiveAppBar = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page,index) => (
+              {pages.map((page, index) => (
                 <MenuItem
                   key={index}
                   onClick={() => handleCloseNavMenu(page.url)}
@@ -165,7 +170,7 @@ const ResponsiveAppBar = () => {
             Meta-HR
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page,index) => (
+            {pages.map((page, index) => (
               <Button
                 key={index}
                 onClick={() => handleCloseNavMenu(page.url)}
@@ -179,11 +184,15 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                { localStorage.getItem("token") ? <Avatar
-                  src={
-                    currUserPfpUrl ? currUserPfpUrl : "/static/images/avatar/2.jpg"
-                  }
-                /> : null }
+                {localStorage.getItem("token") ? (
+                  <Avatar
+                    src={
+                      currUserPfpUrl
+                        ? currUserPfpUrl
+                        : "/static/images/avatar/2.jpg"
+                    }
+                  />
+                ) : null}
               </IconButton>
             </Tooltip>
             <Menu
@@ -202,7 +211,7 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting,index) => (
+              {settings.map((setting, index) => (
                 <MenuItem
                   key={index}
                   onClick={() => handleCloseUserMenu(setting.url)}
@@ -215,7 +224,7 @@ const ResponsiveAppBar = () => {
                   style={{ backgroundColor: "red", color: "white" }}
                   onClick={logout}
                 >
-                  <Typography textAlign="center">logout</Typography>
+                  <Typography textAlign="center">Logout</Typography>
                 </MenuItem>
               )}
             </Menu>

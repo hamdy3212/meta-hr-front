@@ -98,6 +98,15 @@ const Jobs = () => {
           alignItems: "center",
         }}
       >
+        <Button
+          variant="contained"
+          disabled={console.log("first")}
+          color="primary"
+          style={{marginRight: "auto"}}
+          onClick={() => navigate("/addJob")}
+        >
+          New
+        </Button>
         <h2>Filter By</h2>
         <FormControl style={{ marginLeft: "10px", width: "25%" }}>
           <InputLabel id="filter">Category</InputLabel>

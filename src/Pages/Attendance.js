@@ -46,7 +46,7 @@ export default function AttendanceLog() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       };    
-    const url = `${apiURL}/api/Attendances/getByEmployeeId/${employeeID}?pageNumber=1&pageSize=10`;
+    const url = `${apiURL}/api/Attendances/getByEmployeeId/${employeeID}?pageNumber=1&pageSize=1000`;
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((data) => {
@@ -78,7 +78,7 @@ export default function AttendanceLog() {
       requestOptions
     );
 
-    if (response.date === 200) {
+    if (response.status === 200) {
       swalToast("Log deleted successfully.");
       fetchLogs()
     } else {

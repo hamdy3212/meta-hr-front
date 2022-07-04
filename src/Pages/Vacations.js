@@ -35,7 +35,7 @@ const Vacations = () => {
     }
     return params.data.reviewerFirstName + " " + params.data.reviewerLastName;
   };
-  const acceptVacation = async (id)=> {
+  const acceptVacation = async (id) => {
     const requestOptions = {
       method: "POST",
       headers: {
@@ -52,14 +52,14 @@ const Vacations = () => {
       requestOptions
     );
     if (response.status === 200) {
-      swalToast("Vacation Denied!", "success");
+      swalToast("Vacation Request Approved", "success");
       getData();
     } else {
       const respJson = await response.json();
       swalShowErrors("Something went wrong", respJson.errors);
     }
-  }
-  const denyVacation = async (id)=> {
+  };
+  const denyVacation = async (id) => {
     const requestOptions = {
       method: "POST",
       headers: {
@@ -76,35 +76,37 @@ const Vacations = () => {
       requestOptions
     );
     if (response.status === 200) {
-      swalToast("Vacation Accepted!", "success");
+      swalToast("Vacation Request Denied", "success");
       getData();
     } else {
       const respJson = await response.json();
       swalShowErrors("Something went wrong", respJson.errors);
-    }  }
+    }
+  };
   const stateChanger = (props) => {
-    if(props.value === "Pending"){
+    if (props.value === "Pending") {
       return (
         <div>
           <Button
             variant="contained"
             color="success"
             style={{ marginRight: "5px" }}
-            onClick={()=> acceptVacation(props.data.id)}
+            onClick={() => acceptVacation(props.data.id)}
           >
             Accept
           </Button>
-          <Button variant="contained" color="error"
-            onClick={()=> denyVacation(props.data.id)}
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => denyVacation(props.data.id)}
           >
             Deny
           </Button>
         </div>
       );
     } else {
-      return props.value
+      return props.value;
     }
-  
   };
   const columns =
     localStorage.getItem("role") !== "Employee"
@@ -112,7 +114,7 @@ const Vacations = () => {
           { field: "name", headerName: "Name", valueFormatter: fullName },
           { field: "employeeEmail" },
           { field: "departmentName" },
-          { field: "state", cellRenderer: stateChanger }
+          { field: "state", cellRenderer: stateChanger },
         ]
       : [
           {
@@ -121,14 +123,13 @@ const Vacations = () => {
             valueFormatter: fullName,
           },
           { field: "state" },
-          { field: "denialReason" },
         ];
   const [columnDefs, setColumnDefs] = useState([
-    { field: "id", width: 60 },
+    { field: "id", width: 70 },
     ...columns,
-    { field: "from", width: 110, valueFormatter: dateFormatter },
-    { field: "to", width: 110, valueFormatter: dateFormatter },
-
+    { field: "from", width: 150, valueFormatter: dateFormatter },
+    { field: "to", width: 150, valueFormatter: dateFormatter },
+    { field: "denialReason" },
   ]);
   const getData = async () => {
     const requestOptions = {
@@ -141,8 +142,8 @@ const Vacations = () => {
       (await localStorage.getItem("role")) === "Employee"
         ? `${apiURL}/api/VacationRequests/byEmployee?employeeId=${localStorage.getItem(
             "userId"
-          )}&pageNumber=1&pageSize=10`
-        : `${apiURL}/api/VacationRequests?pageNumber=1&pageSize=10`;
+          )}&pageNumber=1&pageSize=1000`
+        : `${apiURL}/api/VacationRequests?pageNumber=1&pageSize=1000`;
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
@@ -182,11 +183,7 @@ const Vacations = () => {
         ></AgGridReact>
       </div>
 
-      {localStorage.getItem("role") === "Employee" ? (
-        <RequestVacation onCreated={handleCreated} />
-      ) : (
-        ""
-      )}
+      <RequestVacation onCreated={handleCreated} />
     </div>
   );
 };
