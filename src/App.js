@@ -18,8 +18,6 @@ import React from "react";
 import { Departments } from "./Pages/Departments";
 import Tickets from "./Pages/Tickets";
 import Vacations from "./Pages/Vacations";
-
-import TestTickets from "./Pages/TestTickets.js";
 import Job from "./Components/Job.js";
 import Test from "./Components/Test.js";
 import MyProfile from "./Pages/MyProfile.js";
@@ -38,7 +36,6 @@ function App() {
             <Route path="/createAccount" element={<CreateAccount />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/applications" element={<Applications />} />
-            <Route path="/testtickets" element={<TestTickets />} />
             <Route path="/applications/:applicationID" element={<ViewApplication />} />
             <Route path="/jobs/:jobID" element={<Job />} />
             <Route path="/myprofile" element={<MyProfile />} />
