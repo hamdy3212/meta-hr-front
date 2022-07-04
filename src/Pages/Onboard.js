@@ -16,7 +16,7 @@ import InputLabel from "@mui/material/InputLabel";
 import { apiURL } from "../envvars";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { swalShowErrors } from "../Utility/swal";
+import { swalShowErrors, swalToast } from "../Utility/swal";
 
 const theme = createTheme();
 
@@ -74,6 +74,9 @@ function Register() {
       console.log(data);
       if (data.isSuccessful === false) {
         swalShowErrors("Something went wrong", data.errors);
+      } else {
+        swalToast("Onboarding complete, you may now log in", "success");
+        navigate("/login");
       }
     };
     xhr.send(data);
