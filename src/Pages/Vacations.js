@@ -5,6 +5,7 @@ import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
 import RequestVacation from "../Components/Vacations/RequestVacation";
 import DenyVacation from "../Components/Vacations/DenyVacation";
+import { userIsInRole, roles } from "../Utility/roles";
 
 import React, {
   useState,
@@ -83,7 +84,7 @@ const Vacations = () => {
     }
   };
   const columns =
-    localStorage.getItem("role") !== "Employee"
+    userIsInRole(roles.employee) === false
       ? [
           { field: "name", headerName: "Name", valueFormatter: fullName },
           { field: "employeeEmail" },
@@ -118,7 +119,7 @@ const Vacations = () => {
       },
     }; // fetch Vacations
     const url =
-      (await localStorage.getItem("role")) === "Employee"
+      userIsInRole(roles.employee)
         ? `${apiURL}/api/VacationRequests/byEmployee?employeeId=${localStorage.getItem(
             "userId"
           )}&pageNumber=1&pageSize=1000`

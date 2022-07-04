@@ -3,7 +3,6 @@ import Button from "@mui/material/Button";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import { AgGridColumn, AgGridReact } from "ag-grid-react";
-
 import CreateTicket from "../Components/Tickets/CreateTicket";
 import SendMessage from "../Components/Tickets/SendMessage";
 import ViewTicket from "../Components/Tickets/ViewTicket";
@@ -15,6 +14,7 @@ import React, {
   useCallback,
 } from "react";
 import { apiURL } from "../envvars";
+import { userIsInRole, roles } from '../Utility/roles'
 
 const Tickets = () => {
   const gridRef = useRef(); // Optional - for accessing Grid's API
@@ -75,14 +75,14 @@ const Tickets = () => {
       },
     }; // fetch Tickets
     const url =
-      (await localStorage.getItem("role")) === "Employee"
+      userIsInRole(roles.employee)
         ? `${apiURL}/api/Tickets/myTickets`
         : `${apiURL}/api/Tickets?pageNumber=1&pageSize=999`;
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((rowData) => {
         console.log(rowData);
-        if (localStorage.getItem("role") === "Employee") {
+        if (userIsInRole(roles.employee)) {
           setRowData(rowData);
         } else {
           setRowData(rowData.objects);
@@ -159,7 +159,7 @@ const Tickets = () => {
           marginTop: "15px"
         }}
       >
-        {localStorage.getItem("role") === "Employee" ? <CreateTicket onCreated={handleCreated}/> : ""}
+        {userIsInRole(roles.employee) ? <CreateTicket onCreated={handleCreated}/> : ""}
         <ViewTicket ticketId={ticketId} selectedTicket={selectedTicket} />
         {ticketStatus === false ? (
           <Button
