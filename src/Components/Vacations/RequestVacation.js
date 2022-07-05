@@ -80,7 +80,6 @@ export default function CustomizedDialogs({ onCreated }) {
       return;
     }
     if (
-      Number.isInteger(numberOfDays) === false ||
       Number.parseInt(numberOfDays) > 14 ||
       Number.parseInt(numberOfDays) < 1
     ) {

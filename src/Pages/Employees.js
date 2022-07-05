@@ -100,7 +100,7 @@ const PeopleList = () => {
                   </li>
                 )}
               </ul>
-              {localStorage.getItem("role") !== "Employee" ? (
+              {userIsInRole(roles.hrJunior) || userIsInRole(roles.hrSenior) ? (
                 <button
                   class="btn draw-border"
                   onClick={() =>
