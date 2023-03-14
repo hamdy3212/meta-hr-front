@@ -21,7 +21,7 @@ export default function SendMessage({ ticketId, onSent }) {
 
   const handleSubmit = async (event) => {
     if (content.length < 1) {
-      alert("Message can't be empty!");
+      swalShow("Message can't be empty!", "", "error");
       return;
     }
     event.preventDefault();

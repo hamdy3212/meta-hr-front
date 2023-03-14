@@ -14,7 +14,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import { apiURL } from "../envvars";
 import ErrorsDisplayer from "../Components/ErrorsDisplayer";
-import { Router } from "@material-ui/icons";
+import { Router } from "@mui/icons-material";
 import { swalShow, swalShowErrors, swalToast } from "../Utility/swal";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";

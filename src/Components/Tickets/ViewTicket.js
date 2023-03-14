@@ -14,7 +14,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import SendMessage from "./SendMessage";
 import Avatar from "@mui/material/Avatar";
 import { apiURL } from "../../envvars";
-import { VisibilityOff } from "@material-ui/icons";
+import { VisibilityOff } from "@mui/icons-material";
 import { swalShow } from '../../Utility/swal';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({

@@ -221,3 +221,11 @@ body,
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.swal2-container {
+  z-index: 1560;
+}
+
+body.swal2-shown swal2-height-auto {
+  height: 80% !important;
+}
